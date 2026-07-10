@@ -6,12 +6,17 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.http.ResponseEntity;
+
+import java.util.HashMap;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import com.StorySmith.Story_Smith.service.UserService;
 import com.StorySmith.Story_Smith.security.JwtUtil;
 
 import com.StorySmith.Story_Smith.model.User;
 import com.StorySmith.Story_Smith.dto.LoginRequestDTO;
+
+import java.util.Map;
 
 
 @RestController
@@ -41,21 +46,43 @@ public class AuthController {
         }
     }
 
+    // @PostMapping("/login")
+    // public ResponseEntity<String> login(@RequestBody LoginRequestDTO loginRequest) {
+
+    //     User user = userRepository.findByEmail(loginRequest.email);
+
+    //     if (user == null) {
+    //         return ResponseEntity.status(401).body("Invalid email or password");
+    //     }
+
+    //     if (!passwordEncoder.matches(loginRequest.password, user.getPassword())) {
+    //         return ResponseEntity.status(401).body("Invalid email or password");
+    //     }
+
+    //     String token = JwtUtil.generateToken(user);
+    //     // Implement login logic here
+    //     return ResponseEntity.ok(token);
+    // }
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody LoginRequestDTO loginRequest) {
+    public ResponseEntity<?> login(@RequestBody LoginRequestDTO loginRequest) {
 
-        User user = userRepository.findByEmail(loginRequest.email);
+        User user = userRepository.findByEmail(loginRequest.getEmail()); // Ensure getter is used
 
-        if (user == null) {
-            return ResponseEntity.status(401).body("Invalid email or password");
+        if (user == null || !passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
+            return ResponseEntity.status(401).body(Map.of("message", "Invalid email or password"));
         }
 
-        if (!passwordEncoder.matches(loginRequest.password, user.getPassword())) {
-            return ResponseEntity.status(401).body("Invalid email or password");
-        }
+        String token = JwtUtil.generateToken(user);
+        
+        // Create a structured map matching your frontend's AuthResponse interface
+        Map<String, Object> response = new HashMap<>();
+        response.put("token", token);
+        response.put("id", user.getId());
+        response.put("username", user.getUsername());
+        response.put("email", user.getEmail());
+        response.put("role", user.getRole()); // Matches 'roles' string on frontend
 
-        String token = JwtUtil.generateToken(user.getEmail(), user.getUsername());
-        // Implement login logic here
-        return ResponseEntity.ok(token);
+        return ResponseEntity.ok(response);
     }
+
 }

@@ -13,7 +13,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.util.List; // Import List
 
-// Make sure @Component is NOT here since we declare it as a @Bean in SecurityConfig
 
 public class JwtFilter extends OncePerRequestFilter {
 

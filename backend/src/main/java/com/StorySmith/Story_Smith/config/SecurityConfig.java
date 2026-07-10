@@ -19,7 +19,10 @@ import com.StorySmith.Story_Smith.security.JwtFilter;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-    
+
+    // Clean Approach: No constructor injections here. 
+    // We instantiate the filter bean manually below to avoid filter duplication loops.
+
     @Bean
     public JwtFilter jwtFilter() {
         return new JwtFilter();
@@ -34,10 +37,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .requestMatchers("/api/auth/**").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/categories/**").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/posts/**").permitAll()
-                .requestMatchers("/api/maps/**").permitAll() 
-                
+                .requestMatchers("/api/projects/**").permitAll()
                 .anyRequest().authenticated()
             );
 
@@ -65,6 +65,4 @@ public class SecurityConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
-
 }

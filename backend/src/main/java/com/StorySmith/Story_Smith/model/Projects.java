@@ -23,15 +23,18 @@ public class Projects {
     @JoinColumn(name = "owner_id", nullable = false)
     private User owner;
 
+    @Column(nullable = false)
+    private String color;
+
 
     public Projects() {
     }
 
-    public Projects(Long id, String name, String description, User owner) {
-        this.id = id;
+    public Projects(String name, String description, User owner, String color) {
         this.name = name;
         this.description = description;
         this.owner = owner;
+        this.color = color;
     }
 
     public Long getId() {
@@ -56,5 +59,21 @@ public class Projects {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Long getOwnerId() {
+        return owner != null ? owner.getId() : null;
+    }
+
+    public User getOwner() {
+        return owner;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
     }
 }

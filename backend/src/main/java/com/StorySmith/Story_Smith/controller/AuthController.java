@@ -1,7 +1,10 @@
 package com.StorySmith.Story_Smith.controller;
 
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,8 +18,10 @@ import com.StorySmith.Story_Smith.security.JwtUtil;
 
 import com.StorySmith.Story_Smith.model.User;
 import com.StorySmith.Story_Smith.dto.LoginRequestDTO;
+import com.StorySmith.Story_Smith.dto.UserSearchDTO;
 
 import java.util.Map;
+import java.util.List;
 
 
 @RestController
@@ -85,4 +90,9 @@ public class AuthController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/members/search")
+    public List<UserSearchDTO> searchUsers(@RequestParam Long projectId, @RequestParam String query) {
+        System.out.println("Controller received search request with projectId: " + projectId + " and query: " + query);
+        return userService.searchUsers(projectId, query);
+    }
 }

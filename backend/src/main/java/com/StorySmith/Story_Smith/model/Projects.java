@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import com.StorySmith.Story_Smith.model.ProjectRole;
 import com.StorySmith.Story_Smith.model.User;
 
+import java.util.List;
+
 @Entity
 @Table(name = "projects")
 public class Projects {
@@ -26,6 +28,15 @@ public class Projects {
     @Column(nullable = false)
     private String color;
 
+    @OneToMany(mappedBy = "project")
+    private List<ProjectCollaborators> members;
+
+    @Column(nullable = false)
+    private Boolean use_ai;
+
+    @Column(nullable = false)
+    private Boolean deleted;
+
 
     public Projects() {
     }
@@ -35,6 +46,8 @@ public class Projects {
         this.description = description;
         this.owner = owner;
         this.color = color;
+        this.use_ai = false;
+        this.deleted = false;
     }
 
     public Long getId() {
@@ -75,5 +88,21 @@ public class Projects {
 
     public void setColor(String color) {
         this.color = color;
+    }
+
+    public Boolean getUseAI() {
+        return use_ai;
+    }
+
+    public void setUseAI(Boolean use_ai) {
+        this.use_ai = use_ai;
+    }
+
+    public Boolean getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        this.deleted = deleted;
     }
 }

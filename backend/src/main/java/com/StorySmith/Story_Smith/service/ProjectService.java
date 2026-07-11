@@ -17,6 +17,9 @@ import com.StorySmith.Story_Smith.model.ProjectCollaborators;
 
 import org.springframework.transaction.annotation.Transactional;
 import java.util.Map;
+import com.StorySmith.Story_Smith.model.ProjectRole;
+
+import com.StorySmith.Story_Smith.repository.ProjectRoleRepository;
 
 @Service
 public class ProjectService {
@@ -29,6 +32,9 @@ public class ProjectService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private ProjectRoleRepository projectRoleRepository;
 
     public List<Projects> GetOwnedProjects(Long userId) {
         return projectRepository.findOwnedProjectsByUserId(userId);
@@ -52,15 +58,18 @@ public class ProjectService {
             // 3. Save the main project entity
             Projects project = projectRepository.save(createProjectDTO.toEntity(user));
 
+            ProjectRole ownerRole = projectRoleRepository.save(new ProjectRole("OWNER", project, "#FF0000", 1));
+            
             // 4. Save the collaborator relation mapping
             ProjectCollaborators pc = projectCollaboratorsRepository.save(
                 new com.StorySmith.Story_Smith.model.ProjectCollaborators(
                     project, 
-                    user, 
-                    com.StorySmith.Story_Smith.model.ProjectRole.OWNER
+                    user,
+                    ownerRole     
                 )
             );
 
+            // pc.addRole(ownerRole);
             // Return a clean JSON message matching your frontend standards
             return ResponseEntity.ok(Map.of("message", "Project created successfully", "projectId", project.getId()));
 
@@ -71,5 +80,10 @@ public class ProjectService {
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(Map.of("message", "An error occurred while creating the project: " + e.getMessage()));
         }
+    }
+
+
+    public Projects GetProjectById(Long id) {
+        return projectRepository.findById(id).orElse(null);
     }
 }

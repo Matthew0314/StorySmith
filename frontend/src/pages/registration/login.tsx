@@ -12,17 +12,26 @@ function Login() {
 
     const navigate = useNavigate();
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         try {
-            const token = await loginUser({ email, password });
+            // const { token } = await loginUser({ email, password });
 
-            localStorage.setItem("token", token);
+            // localStorage.setItem("token", token);
+
+            const responseData = await loginUser({ email, password });
+
+        // Safely extract the token string out of the object
+        const tokenString = responseData.token;
+        localStorage.setItem("token", tokenString);
+
+        // Optional: You can also save their username for the UI!
+        localStorage.setItem("username", responseData.username);
 
             setMessage("Login successful!");
 
-            navigate("/profile");
+            navigate("/projects");
         } catch (err) {
             setMessage("Invalid email or password");
         }

@@ -30,7 +30,7 @@ function Register() {
             const { token } = await loginUser({ email, password });
             localStorage.setItem("token", token);
 
-            navigate("/profile");
+            navigate("/projects");
 
             
 

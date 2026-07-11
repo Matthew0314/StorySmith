@@ -15,6 +15,8 @@ import com.StorySmith.Story_Smith.dto.CreateProjectDTO;
 import com.StorySmith.Story_Smith.model.Projects;
 
 import java.util.List;
+import org.springframework.web.bind.annotation.RequestMethod;
+
 
 @RestController
 @RequestMapping("/api/projects")
@@ -23,6 +25,9 @@ public class ProjectController {
 
     @Autowired
     private com.StorySmith.Story_Smith.service.ProjectService projectService;
+
+    @Autowired
+    private com.StorySmith.Story_Smith.service.ProjectSettingsService projectSettingsService;
 
     @GetMapping("/{id}/owner")
     public ResponseEntity<List<Projects>> getProjectsOwned(@PathVariable Long id) {
@@ -50,6 +55,25 @@ public class ProjectController {
         
         return projectService.CreateProject(createProjectDTO);
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Projects> getProjectById(@PathVariable Long id) {
+        Projects project = projectService.GetProjectById(id);
+        if (project != null) {
+            return ResponseEntity.ok(project);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+
+
+    @GetMapping("/{id}/projectMembers")
+    public ResponseEntity<?> getProjectMembers(@PathVariable Long id) {
+        return ResponseEntity.ok(projectSettingsService.GetProjectSettings(id));
+    }
+    
+    
 
 
 }

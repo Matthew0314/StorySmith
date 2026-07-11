@@ -8,6 +8,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import com.StorySmith.Story_Smith.repository.UserRepository;
 import com.StorySmith.Story_Smith.model.UserRole;
 
+import com.StorySmith.Story_Smith.dto.UserSearchDTO;
+import java.util.List;
+
 @Service
 public class UserService {
 
@@ -33,5 +36,12 @@ public class UserService {
 
         userRepository.save(user);
         return "User registered successfully";
+    }
+
+    public List<UserSearchDTO> searchUsers(Long projectId, String query) {
+        return userRepository.searchUsersNotInProject(projectId, query)
+                .stream()
+                .map(UserSearchDTO::new)
+                .toList();
     }
 }

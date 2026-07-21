@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.StorySmith.Story_Smith.repository.UserRepository;
 
@@ -22,6 +23,11 @@ import org.springframework.http.ResponseEntity;
 
 import com.StorySmith.Story_Smith.model.ProjectRole;
 import com.StorySmith.Story_Smith.repository.ProjectRoleRepository;
+
+import java.util.Comparator;
+
+
+import java.util.Set;
 
 
 @Service
@@ -55,34 +61,7 @@ public class ProjectSettingsService {
         return ResponseEntity.ok("AI settings updated successfully");
     }
 
-    public ProjectSettingsDTO GetProjectSettings(Long projectId) {
-
-
-        Projects project = projectRepository.findById(projectId)
-                .orElseThrow(() ->
-                    new RuntimeException("Project not found")
-                );
-
-
-        List<ProjectCollaborators> collaborators =
-                collaboratorRepository.findByProjectId(projectId);
-
-
-
-        List<ProjectMemberDTO> members = collaborators.stream()
-                .map(this::convertMember)
-                .toList();
-
-
-
-        return new ProjectSettingsDTO(
-                project.getId(),
-                project.getName(),
-                members,
-                new ArrayList<>(), // roles later
-                project.getUseAI()
-        );
-    }
+    
 
 
     public ResponseEntity<?> deleteProject(Long projectId) {
@@ -163,6 +142,81 @@ public class ProjectSettingsService {
         return ResponseEntity.ok("User added to project successfully");
     }
 
+    // public ProjectSettingsDTO GetProjectSettings(Long projectId) {
+
+
+    //     Projects project = projectRepository.findById(projectId)
+    //             .orElseThrow(() ->
+    //                 new RuntimeException("Project not found")
+    //             );
+
+
+    //     List<ProjectCollaborators> collaborators =
+    //             collaboratorRepository.findByProjectId(projectId);
+
+
+
+    //     List<ProjectMemberDTO> members = collaborators.stream()
+    //             .map(this::convertMember)
+    //             .toList();
+
+
+
+    //     return new ProjectSettingsDTO(
+    //             project.getId(),
+    //             project.getName(),
+    //             members,
+    //             new ArrayList<>(), // roles later
+    //             project.getUseAI()
+    //     );
+    // }
+
+    public ProjectSettingsDTO GetProjectSettings(Long projectId) {
+
+        Projects project = projectRepository.findById(projectId)
+                .orElseThrow(() ->
+                    new RuntimeException("Project not found")
+                );
+
+
+        List<ProjectCollaborators> collaborators =
+                collaboratorRepository.findByProjectId(projectId);
+
+
+        List<ProjectMemberDTO> members = collaborators.stream()
+                .map(this::convertMember)
+                .toList();
+
+
+        // Set<ProjectRole> projectRoles = collaborators.stream()
+        //         .flatMap(collaborator -> collaborator.getRoles().stream())
+        //         .collect(Collectors.toSet());
+
+        List<ProjectRole> projectRoles = collaborators.stream()
+            .flatMap(collaborator -> collaborator.getRoles().stream())
+            .distinct()
+            .sorted(Comparator.comparing(ProjectRole::getPosition))
+            .toList();
+
+
+        List<RoleDTO> roles = projectRoles.stream()
+                .map(role -> new RoleDTO(
+                        role.getId(),
+                        role.getName(),
+                        new ArrayList<>()
+                ))
+                .toList();
+
+
+        return new ProjectSettingsDTO(
+                project.getId(),
+                project.getName(),
+                members,
+                roles,
+                project.getUseAI()
+        );
+    }
+        
     private ProjectMemberDTO convertMember(ProjectCollaborators collaborator) {
 
 

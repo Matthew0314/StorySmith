@@ -20,6 +20,7 @@ import java.util.Map;
 import com.StorySmith.Story_Smith.model.ProjectRole;
 
 import com.StorySmith.Story_Smith.repository.ProjectRoleRepository;
+import java.util.Comparator;
 
 @Service
 public class ProjectService {
@@ -35,6 +36,9 @@ public class ProjectService {
 
     @Autowired
     private ProjectRoleRepository projectRoleRepository;
+
+    @Autowired
+    private WikiService wikiService;
 
     public List<Projects> GetOwnedProjects(Long userId) {
         return projectRepository.findOwnedProjectsByUserId(userId);
@@ -69,6 +73,8 @@ public class ProjectService {
                 )
             );
 
+            wikiService.setDefaultWikiCategories(project);
+
             // pc.addRole(ownerRole);
             // Return a clean JSON message matching your frontend standards
             return ResponseEntity.ok(Map.of("message", "Project created successfully", "projectId", project.getId()));
@@ -82,8 +88,26 @@ public class ProjectService {
         }
     }
 
+    public List<ProjectRole> GetUserRoleInProject(Long projectId, Long userId) {
+        List<ProjectCollaborators> collaborators = projectCollaboratorsRepository.findListByProjectIdAndUserId(projectId, userId);
+
+        if (collaborators.isEmpty()) {
+            return List.of(); // User has no role in this project
+        }
+
+        List<ProjectRole> projectRoles = collaborators.stream()
+                .flatMap(collaborator -> collaborator.getRoles().stream())
+                .sorted(Comparator.comparing(ProjectRole::getPosition))
+                .distinct()
+                .toList();
+
+        return projectRoles;
+    }
+
 
     public Projects GetProjectById(Long id) {
         return projectRepository.findById(id).orElse(null);
     }
+
+
 }

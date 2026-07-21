@@ -126,7 +126,7 @@ export default function Projects() {
 
                             <div className="book-cover">
                                 <h3>{project.name}</h3>
-                                <p>{project.description}</p>
+                                {/* <p>{project.description}</p> */}
                             </div>
 
                         </div>

@@ -17,6 +17,8 @@ import com.StorySmith.Story_Smith.model.Projects;
 import java.util.List;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.StorySmith.Story_Smith.model.ProjectRole;
+
 
 @RestController
 @RequestMapping("/api/projects")
@@ -64,6 +66,16 @@ public class ProjectController {
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @GetMapping("/{projectId}/roles/{userId}")
+    public ResponseEntity<List<ProjectRole>> getRoleInProject(
+            @PathVariable Long projectId,
+            @PathVariable Long userId
+    ) {
+        return ResponseEntity.ok(
+            projectService.GetUserRoleInProject(projectId, userId)
+        );
     }
 
 

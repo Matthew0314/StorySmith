@@ -14,4 +14,6 @@ public interface ProjectCollaboratorsRepository extends JpaRepository<ProjectCol
     ProjectCollaborators findByProjectIdAndUserId(Long projectId, Long userId);
 
      void deleteByProjectIdAndUserId(Long projectId, Long userId);
+
+     List<ProjectCollaborators> findListByProjectIdAndUserId(Long projectId, Long userId);
 }

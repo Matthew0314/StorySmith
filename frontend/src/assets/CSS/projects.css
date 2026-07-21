@@ -1,6 +1,16 @@
+:root {
+    /* --book-color:#b33; */
+    /* --book-shadow:#822; */
+
+    --book-height:340px;
+    --book-width:80px;
+}
+
+
+
 .bookshelf{
     display:flex;
-    gap:8px;
+    /* gap:8px; */
     align-items:flex-end;
 
     padding:25px;
@@ -14,12 +24,14 @@
 }
 
 .book{
-    width:55px;
-    height:220px;
+    width:var(--book-width);
+    height:var(--book-height);
 
     perspective:1000px;
 
     cursor:pointer;
+    transition: transform .35s ease;
+
 }
 
 .book-inner{
@@ -36,29 +48,33 @@
 
 .book:hover .book-inner {
     transform:
-        translateY(-10px)
+        /* translateY(-10px); */
+        translateX(-37px)
         rotateY(-90deg);
+
+        /* transition: transform .35s ease; */
 }
 
 .book:hover{
     z-index:999;
 }
 
-.bookshelf:hover .book {
-    transform: translateX(0);
+/* .bookshelf:hover .book {
+    transform: translateX(0px);
     transition: transform .35s ease;
-}
+} */
 
 .book:hover ~ .book {
-    transform: translateX(165px);
+    transform: translateX(215px);
 }
+
 
 .book-spine{
 
     position:absolute;
 
-    width:55px;
-    height:220px;
+    width:var(--book-width);
+    height:var(--book-height);
 
     /* background:linear-gradient(#b33,#822); */
 
@@ -91,22 +107,20 @@
 
     position:absolute;
     box-sizing:border-box;
-    left:55px;
+    left:var(--book-width);
 
-    width:180px;
-    height:220px;
+    width:280px;
+    height:var(--book-height);
 
     background:#f4efe2;
 
     border-radius:4px;
 
-    transform:
-        rotateY(90deg);
+    transform: rotateY(90deg);
 
     transform-origin:left;
 
-    padding:18px;
+    /* padding:18px; */
 
-    box-shadow:
-        8px 8px 18px rgba(0,0,0,.35);
+    /* box-shadow: 8px 8px 18px rgba(0,0,0,.35); */
 }

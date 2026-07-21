@@ -54,7 +54,7 @@ public class ProjectCollaborators {
     ){
         this.project = project;
         this.user = user;
-        this.roles = new HashSet<>();
+        // this.roles = new HashSet<>();
         this.roles.add(role);
     }
 

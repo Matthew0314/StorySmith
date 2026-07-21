@@ -7,6 +7,8 @@ import Projects from './pages/projects.tsx'
 import ProtectedRoute from './components/protectedroute.tsx'
 import ProjectHomePage from './pages/projectHomePage.tsx'
 import Settings from './pages/settings.tsx'
+import WikiHome from "./pages/wikiHome.tsx"
+
 
 function App() {
   return (
@@ -38,6 +40,15 @@ function App() {
           element={
             <ProtectedRoute>
               <Settings />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/projects/:projectId/wiki"
+          element={
+            <ProtectedRoute>
+              <WikiHome />
             </ProtectedRoute>
           }
         />

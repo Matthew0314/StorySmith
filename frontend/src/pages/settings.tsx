@@ -39,6 +39,8 @@ export default function ProjectSettings() {
 
     const [inviteOpen, setInviteOpen] = useState(false);
 
+    const [roles, setRoles] = useState<Role[]>([]);
+
     const [settings, setSettings] = useState<ProjectSettingsDTO | null>(null);
 
     const params = useParams();
@@ -60,6 +62,7 @@ export default function ProjectSettings() {
     const fetchSettings = async () => {
         if (!token) return;
 
+
         try {
             // Pass raw axios query along with manually configured headers
             const res = await axios.get(`http://localhost:8080/api/projects/${projectId}/settings`, {
@@ -68,16 +71,34 @@ export default function ProjectSettings() {
                 }
             });
 
+            const id = JSON.parse(atob(token.split(".")[1])).userId;
+            const roles = await axios.get(`http://localhost:8080/api/projects/${projectId}/roles/${id}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+
+            setRoles(roles.data);
+
             console.log(res.data);
             setSettings(res.data);
             setAiEnabled(res.data.useAI);
+            console.log("Fetched project settings:", res.data);
         } catch (err) {
             console.error("Failed to fetch projects database list:", err);
         }
     };
 
     const toggleAIFeatures = async (enabled: boolean) => {
+
+        if (!roles.some(role => role.name.toUpperCase() === "OWNER")) {
+            alert("Only project owners can change AI settings.");
+            return;
+        }
+        
         setAiEnabled(enabled);
+
+        
 
         try {
             const res = await axios.post(
@@ -196,9 +217,12 @@ export default function ProjectSettings() {
                                     role => role.name === "Owner"
                                 ) &&
                                 <>
+                                {!member.roles.some(role => role.name.toUpperCase() === "OWNER") && 
                                 <button className="secondary-btn" onClick={() => removeUser(member.userId)}>
                                     Remove Member
                                 </button>
+                                }
+                                
                                 <button className="secondary-btn">
                                     Edit Roles
                                 </button>
@@ -298,10 +322,11 @@ export default function ProjectSettings() {
 
                         <input
                             type="checkbox"
-                            checked={aiEnabled}
+                            
                             onChange={() =>
                                 toggleAIFeatures(!aiEnabled)
                             }
+                            checked={aiEnabled}
                         />
 
                         <span className="slider"></span>
@@ -316,7 +341,8 @@ export default function ProjectSettings() {
 
 
             {/* DELETE */}
-            <section className="danger-section">
+            {roles.some(role => role.name === "OWNER") && (
+                <section className="danger-section">
 
                 <h2>
                     Danger Zone
@@ -337,6 +363,7 @@ export default function ProjectSettings() {
 
 
             </section>
+            )}
 
             <DeleteProjectModal
                 isOpen={deleteOpen} 

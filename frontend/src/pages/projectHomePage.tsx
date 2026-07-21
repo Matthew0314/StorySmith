@@ -1,6 +1,9 @@
 import { Link, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
+
+
+
 interface Project {
     id: number;
     name: string;
@@ -45,6 +48,12 @@ export default function ProjectHomePage() {
             <Link to={`/projects/${projectId}/settings`}>
                 <button className="primary-btn">
                     Project Settings
+                </button>
+            </Link>
+
+            <Link to={`/projects/${projectId}/wiki`}>
+                <button className="primary-btn">
+                    Project Wiki
                 </button>
             </Link>
         </div>

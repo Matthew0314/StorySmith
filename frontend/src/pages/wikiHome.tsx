@@ -4,6 +4,7 @@ import axios from "axios";
 import CreateWikiEntryPopup from "../components/CreateWikiEntryPopup";
 import "../assets/CSS/wikiHome.css";
 import WikiCards from "../components/WikiCards";
+import CategoryManagerModal, { type SavePayload } from "../components/wiki/CategoryManagerModal";
 
 interface WikiCategory {
     id: number;
@@ -28,78 +29,60 @@ interface WikiEntryDTO {
 }
 
 export default function WikiHome() {
-
-
     const { projectId } = useParams();
     const [categories, setCategories] = useState<WikiCategory[]>([]);
     const [subcategories, setSubcategories] = useState<WikiSubcategory[]>([]);
     const [entries, setEntries] = useState<WikiEntryDTO[]>([]);
     const [isCreateOpen, setIsCreateOpen] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(null);
     const [selectedCategory, setSelectedCategory] = useState<WikiCategory | null>(null);
 
-    let token = localStorage.getItem("token");
+    const token = localStorage.getItem("token");
 
     useEffect(() => {
-        if(projectId) {
+        if (projectId) {
             fetchCategories();
         } else {
             console.error("Project ID is missing in the URL");
         }
     }, [projectId]);
 
-    // Fetches all categories and subcategories for the current project and sets them in state.
     const fetchCategories = async () => {
-        if (!token) return;
+        if (!token || !projectId) return;
 
         try {
             const res = await axios.get(`http://localhost:8080/api/projects/${projectId}/wiki/category`, {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
+                headers: { Authorization: `Bearer ${token}` }
             });
-
-            if (!res.data) return;
 
             const subRes = await axios.get(
                 `http://localhost:8080/api/projects/${projectId}/wiki/subcategory`,
-                {
-                    headers: {
-                    Authorization: `Bearer ${token}`,
-                    },
-                }
-                );
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
 
-            // Extract the array directly from the ResponseEntity body
             const subcategoriesData = subRes.data?.body || subRes.data;
-
-            // Pass the raw array to your state setter
-            setSubcategories(subcategoriesData);
-
-            console.log("Fetched categories:", res.data);
-            console.log("Fetched subcategories:", subRes.data);
-
 
             setCategories(res.data);
             setSubcategories(subcategoriesData);
-            setSelectedCategoryId(res.data.length > 0 ? res.data[0].id : null);
+
             if (res.data.length > 0) {
-                loadEntries(res.data[0].id);
+                const initialCategory = res.data[0];
+                setSelectedCategoryId((prevId) => prevId ?? initialCategory.id);
+                setSelectedCategory((prevCat) => prevCat ?? initialCategory);
+                loadEntries(selectedCategoryId ?? initialCategory.id);
             }
         } catch (err) {
             console.error("Error fetching wiki categories:", err);
         } 
     };
 
-    // Gets all the entries for a given category and sets them in state. Called when a category is selected.
     const loadEntries = async (categoryId: number) => {
-        if (!token) return;   
+        if (!token || !projectId) return;   
 
         try {
             const ent = await axios.get(`http://localhost:8080/api/projects/${projectId}/wiki/category/${categoryId}/entries`, {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
+                headers: { Authorization: `Bearer ${token}` }
             });
             setEntries(ent.data);
         } catch (err) {
@@ -111,85 +94,111 @@ export default function WikiHome() {
         if (!window.confirm("Are you sure you want to delete this entry?")) return;
 
         try {
-        await axios.delete(
-            `http://localhost:8080/api/projects/${projectId}/wiki/entries/${entryId}`,
-            { headers: { Authorization: `Bearer ${token}` } }
-        );
-        if (selectedCategoryId) {
-            loadEntries(selectedCategoryId);
-        }
+            await axios.delete(
+                `http://localhost:8080/api/projects/${projectId}/wiki/entries/${entryId}`,
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
+            if (selectedCategoryId) {
+                loadEntries(selectedCategoryId);
+            }
         } catch (err) {
-        console.error("Failed to delete entry:", err);
+            console.error("Failed to delete entry:", err);
+        }
+    };
+
+    const handleSaveCategories = async (payload: SavePayload) => {
+        try {
+            await axios.put(
+                `http://localhost:8080/api/projects/${projectId}/wiki/categories/batch`,
+                payload,
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
+            await fetchCategories();
+        } catch (err) {
+            console.error("Failed to save categories batch:", err);
+            throw err;
         }
     };
 
     return (
-        <div className="wiki-container">
-            {/* Header Section */}
-            <div className="wiki-header">
-            <div>
-                <h1 className="wiki-title">Wiki Home Page</h1>
-                <p className="wiki-subtitle">
-                Welcome to the Wiki Home Page. Manage and view all documentation for your project.
-                </p>
-            </div>
+        <>
+            <div className="categories-page">
+                <button onClick={() => setIsModalOpen(true)} className="btn btn-primary">
+                    ⚙️ Manage Categories
+                </button>
+
+                <CategoryManagerModal
+                    isOpen={isModalOpen}
+                    categories={categories}
+                    subcategories={subcategories}
+                    onClose={() => setIsModalOpen(false)}
+                    onSave={handleSaveCategories}
+                />
             </div>
 
-            {/* Categories Selector */}
-            <div className="categories-section">
-            <h2 className="section-label">Categories</h2>
-            {categories.length > 0 ? (
-                <div className="categories-list">
-                {categories.map((category) => {
-                    const isSelected = selectedCategoryId === category.id;
-                    return (
-                    <button
-                        key={category.id}
-                        onClick={() => {
-                        setSelectedCategoryId(category.id);
-                        setSelectedCategory(category);
-                        loadEntries(category.id);
-                        }}
-                        className={`category-pill ${isSelected ? "selected" : ""}`}
-                    >
-                        {category.name}
-                    </button>
-                    );
-                })}
+            <div className="wiki-container">
+                <div className="wiki-header">
+                    <div>
+                        <h1 className="wiki-title">Wiki Home Page</h1>
+                        <p className="wiki-subtitle">
+                            Welcome to the Wiki Home Page. Manage and view all documentation for your project.
+                        </p>
+                    </div>
                 </div>
-            ) : (
-                <p className="empty-text">No categories available.</p>
-            )}
+
+                <div className="categories-section">
+                    <h2 className="section-label">Categories</h2>
+                    {categories.length > 0 ? (
+                        <div className="categories-list">
+                            {categories.map((category) => {
+                                const isSelected = selectedCategoryId === category.id;
+                                return (
+                                    <button
+                                        key={category.id}
+                                        onClick={() => {
+                                            setSelectedCategoryId(category.id);
+                                            setSelectedCategory(category);
+                                            loadEntries(category.id);
+                                        }}
+                                        className={`category-pill ${isSelected ? "selected" : ""}`}
+                                    >
+                                        {category.name}
+                                    </button>
+                                );
+                            })}
+                        </div>
+                    ) : (
+                        <p className="empty-text">No categories available.</p>
+                    )}
+                </div>
+
+                <WikiCards
+                    key={selectedCategoryId}
+                    entries={entries}
+                    selectedCategoryName={selectedCategory?.name}
+                    selectedCategoryId={selectedCategoryId}
+                    projectId={projectId || ""}
+                    onCreateClick={() => setIsCreateOpen(true)}
+                    onDiscardEntry={handleDiscardEntry}
+                />
+
+                <CreateWikiEntryPopup
+                    isOpen={isCreateOpen}
+                    onClose={() => setIsCreateOpen(false)}
+                    projectId={Number(projectId)}
+                    categoryId={selectedCategoryId ?? 0}
+                    categories={categories}
+                    subcategories={subcategories}
+                    onEntryCreated={() => {
+                        setIsCreateOpen(false);
+                        if (selectedCategoryId) {
+                            loadEntries(selectedCategoryId);
+                        } else {
+                            fetchCategories();
+                        }
+                    }}
+                />
             </div>
-
-            {/* Entries List Component (Renders .entries-section directly) */}
-            <WikiCards
-                key={selectedCategoryId}
-                entries={entries}
-                selectedCategoryName={selectedCategory?.name}
-                selectedCategoryId={selectedCategoryId}
-                projectId={projectId || ""}
-                onCreateClick={() => setIsCreateOpen(true)}
-                onDiscardEntry={handleDiscardEntry}
-            />
-
-            {/* Popup Modal */}
-            <CreateWikiEntryPopup
-                isOpen={isCreateOpen}
-                onClose={() => setIsCreateOpen(false)}
-                projectId={Number(projectId)}
-                categoryId={selectedCategoryId ?? 0}
-                categories={categories}
-                subcategories={subcategories}
-                onEntryCreated={() => {
-                    setIsCreateOpen(false);
-                    if (selectedCategoryId) {
-                    loadEntries(selectedCategoryId);
-                    } else {
-                    fetchCategories();
-                    }
-                }}
-            />
-        </div>
+        </>
     );
 }

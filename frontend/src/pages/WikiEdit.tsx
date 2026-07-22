@@ -1,10 +1,12 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import WikiBlockRenderer from "../components/WikiBlockRenderer";
-import type { EntryData, QuoteBlock, TextBlock } from "../types/WikiBlocks";
+import type { EntryData, QuoteBlock, StatBlock, TextBlock } from "../types/WikiBlocks";
 import "../assets/CSS/wiki/wikiEntryEdit.css";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import type { DropResult } from "@hello-pangea/dnd";
+import { Link } from "react-router-dom"
+// import { title } from "process";
 
 type SaveStatus = "saved" | "saving" | "unsaved" | "error";
 export default function WikiEdit() {
@@ -97,6 +99,25 @@ export default function WikiEdit() {
         setEntryData({ ...entryData, blocks: [...entryData.blocks, newBlock] });
     };
 
+    const addStatBlock = () => {
+        const newBlock: StatBlock = {
+            id: Date.now(),
+            type: "stats",
+            data: {
+                title: "Stats",
+                maxValue: 100,
+                stats: [
+                    { id: "stat1", label: "Health", value: 50 },
+                    { id: "stat2", label: "Strength", value: 50 },
+                    { id: "stat3", label: "Agility", value: 50 },
+                    { id: "stat4", label: "Intelligence", value: 50 },
+                    { id: "stat5", label: "Endurance", value: 50 }
+                ]
+            }
+        };
+        setEntryData({ ...entryData, blocks: [...entryData.blocks, newBlock] });
+    };
+
     // 2. Add Quote Block
     const addQuoteBlock = () => {
         const newBlock: QuoteBlock = {
@@ -110,7 +131,7 @@ export default function WikiEdit() {
         setEntryData({ ...entryData, blocks: [...entryData.blocks, newBlock] });
     };
 
-    const handleBlockChange = (index: number, updatedBlock: TextBlock | QuoteBlock) => {
+    const handleBlockChange = (index: number, updatedBlock: TextBlock | QuoteBlock | StatBlock) => {
         updateEntryState((prev) => {
             const updatedBlocks = [...prev.blocks];
             updatedBlocks[index] = updatedBlock;
@@ -151,49 +172,13 @@ export default function WikiEdit() {
         }));
     };
 
-
-    // return (
-    //     <>
-    //     <div className="wiki-edit-container">
-    //         <div className="component-column">
-    //             <input className="wiki-edit-title" value={entryData?.title || "Loading..."} name="title" onChange={(e) => setEntryData({ ...entryData, title: e.target.value })} />
-    //             {entryData?.blocks.map((block, index) => (
-    //                 <WikiBlockRenderer 
-    //                     key={block.id} 
-    //                     block={block} 
-    //                     // DO NOT FORGET THIS LINE:
-    //                     onBlockChange={(updatedBlock) => {
-    //                         const updatedBlocks = [...(entryData?.blocks || [])];
-    //                         updatedBlocks[index] = updatedBlock;
-    //                         setEntryData({ ...entryData, blocks: updatedBlocks });
-    //                     }}
-    //                 />
-    //             ))}
-    //         </div>
-    //         <div className="preview-column">
-    //             <h2 className="preview-title">Preview</h2>
-    //             <div className="preview-content">
-    //             </div>
-    //         </div>
-    //     </div>
-
-    //     {/* Block Creation Toolbar */}
-    //         <div className="add-block-toolbar">
-    //             <span className="toolbar-label">+ Add Component:</span>
-    //             <button type="button" onClick={addTextBlock} className="add-block-btn">
-    //                 📄 Text
-    //             </button>
-    //             <button type="button" onClick={addQuoteBlock} className="add-block-btn">
-    //                 💬 Quote
-    //             </button>
-    //         </div>
-    //     </>
-
-
-    // );
     return (
         <div className="wiki-edit-wrapper">
             {/* Status bar... */}
+            <div>{saveStatus}</div>
+
+
+            <Link to={`/projects/${projectId}/wiki`}>Back</Link>
 
             <div className="wiki-edit-container">
                 <div className="component-column">
@@ -202,6 +187,12 @@ export default function WikiEdit() {
                         value={entryData?.title ?? "Loading..."} 
                         onChange={(e) => updateEntryState((prev) => ({ ...prev, title: e.target.value }))} 
                     />
+
+                    <div className="category-container">
+                        
+
+
+                    </div>
 
                     {/* Drag and Drop Zone */}
                     <DragDropContext onDragEnd={handleDragEnd}>
@@ -253,19 +244,26 @@ export default function WikiEdit() {
 
                 {/* Preview Column... */}
                 <div className="preview-column">
-                    <h2 className="preview-title">Preview</h2>
-                    <div className="preview-content">
-                    </div>
+                    <h2 className="preview-title">Table of Contents</h2>
+                    {/* <div className="preview-content">
+                        {entryData?.blocks.map(data.title) ? (
+
+                        )};
+
+                    </div> */}
                 </div>
 
             {/* Block Creation Toolbar */}
             <div className="add-block-toolbar">
-               <span className="toolbar-label">+ Add Component:</span>
+               {/* <span className="toolbar-label">+ Add Component:</span> */}
                 <button type="button" onClick={addTextBlock} className="add-block-btn">
                📄 Text
                </button>
                <button type="button" onClick={addQuoteBlock} className="add-block-btn">
                    💬 Quote
+               </button>
+               <button type="button" onClick={addStatBlock} className="add-block-btn">
+                   � Stat
                </button>
              </div>
         </div>

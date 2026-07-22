@@ -11,11 +11,13 @@ import java.util.UUID;
 )
 @JsonSubTypes({
     @JsonSubTypes.Type(value = TextBlock.class, name = "text"),
-    @JsonSubTypes.Type(value = QuoteBlock.class, name = "quote")
+    @JsonSubTypes.Type(value = QuoteBlock.class, name = "quote"),
+    @JsonSubTypes.Type(value = StatBlockDTO.class, name = "stat")
 })
 public abstract class WikiBlock {
     private String id;
     private String type;
+    private Integer position;
 
     WikiBlock() {}
 
@@ -26,8 +28,10 @@ public abstract class WikiBlock {
 
     public String getId() { return id; }
     public String getType() { return type; }
+    public Integer getPosition() { return position; }
 
     public void setId(String id) { this.id = id; }
     public void setType(String type) { this.type = type; }
+    public void setPosition(Integer position) { this.position = position; }
 
 }

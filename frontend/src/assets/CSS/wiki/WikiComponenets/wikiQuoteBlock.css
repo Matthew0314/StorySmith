@@ -1,7 +1,8 @@
-.text-block-editor {
+.quote-block-editor {
     display: flex;
     flex-direction: column;
     gap: 8px;
+    /* background: transparent; */
     background: var(--background);
     /* padding: 16px; */
     padding: 22px 16px 25px 16px;
@@ -13,44 +14,45 @@
 }
 
 /* Subtle accent highlight on focus */
-.text-block-editor:focus-within {
+.quote-block-editor:focus-within {
     /* border-color: #6366f1; */
     /* box-shadow: 0 4px 12px rgba(99, 102, 241, 0.08); */
 }
 
 /* Common borderless input baseline */
-.text-block-title-input,
-.text-block-content-textarea {
+.quote-block-title-input,
+.quote-block-content-textarea {
     width: 100%;
     border: none;
     outline: none;
     background: transparent;
     font-family: inherit;
-    color: var(--titleText);
+    /* color: #1e293b; */
+    color: var(--text);
     resize: none;
 }
 
 /* Title Input */
-.text-block-title-input {
+.quote-block-title-input {
     font-size: 1.25rem;
     font-weight: 600;
     line-height: 1.4;
 }
 
-.text-block-title-input::placeholder {
+.quote-block-title-input::placeholder {
     color: #94a3b8;
     font-weight: 500;
 }
 
 /* Content Textarea */
-.text-block-content-textarea {
-    font-size: 1rem;
+.quote-block-content-textarea {
+    font-size: 1.5rem;
     line-height: 1.6;
     /* color: #334155; */
     color: var(--text);
     overflow: hidden; /* Handled via JS auto-grow */
 }
 
-.text-block-content-textarea::placeholder {
+.quote-block-content-textarea::placeholder {
     color: #cbd5e1;
 }

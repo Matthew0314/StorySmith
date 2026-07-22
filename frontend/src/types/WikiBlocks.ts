@@ -1,4 +1,4 @@
-export type WikiBlock = QuoteBlock | TextBlock; // | ImageBlock;
+export type WikiBlock = QuoteBlock | TextBlock | StatBlock; // | ImageBlock;
 
 export interface QuoteBlock {
     id: number;
@@ -20,6 +20,24 @@ export interface TextBlock {
     };
 }
 
+
+export interface StatBlock {
+    id: number;
+    type: "stats";
+    position: number;
+    data: {
+        title: string;
+        maxValue: number;
+        stats: StatItem[];
+    };
+}
+
+export interface StatItem {
+    id: string;
+    label: string;
+    value: number;
+}
+
 export interface EntryData {
     id: number;
     title: string;
@@ -27,6 +45,8 @@ export interface EntryData {
     subCategoryName?: string;
     blocks: WikiBlock[];
 }
+
+
 
 
 

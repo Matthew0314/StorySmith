@@ -3,11 +3,12 @@ import React from "react";
 // import "../../assets/CSS/wikiBlockRenderer.css";
 import WikiTextBlock from "../components/wiki/WikiComponents/wikiTextBlock";
 import QuoteBlockComponent from "../components/wiki/WikiComponents/wikiQuoteBlock";
+import StatBlockComponent from "../components/wiki/WikiComponents/wikiStatsBlock";
 
 interface WikiBlockRendererProps {
     block: WikiBlock;
     onBlockChange: (updatedBlock: WikiBlock) => void; // Make sure this prop is defined
-    onDelete: (id: number) => void;
+    onDelete: () => void;
 }
 
 export default function WikiBlockRenderer({ block, onBlockChange, onDelete }: WikiBlockRendererProps) {
@@ -28,22 +29,32 @@ export default function WikiBlockRenderer({ block, onBlockChange, onDelete }: Wi
                     onChange={(updatedData) => onBlockChange({ ...block, data: updatedData })}
                 />
             );
+        case "stats":
+            return (
+                <StatBlockComponent
+                    id={block.id}
+                    data={block.data}
+                    onChange={(newData) => onBlockChange({ ...block, id: block.id, data: newData })}
+                    onDelete={onDelete}
+                />
+            );
         default:
             return null;
     }
 }
 
     return (
-        <div className="wiki-block-wrapper relative group mb-4 p-4 border rounded shadow-sm">
+        <div className="">
+            
             {/* Delete button positioned in top-right */}
-            <button
+            {/* <button
                 type="button"
                 onClick={() => onDelete(block.id)}
                 className="absolute top-2 right-2 text-red-500 hover:text-red-700 font-semibold text-sm px-2 py-1 rounded border border-transparent hover:border-red-300 transition-all"
                 title="Delete block"
             >
                 ✕ Delete
-            </button>
+            </button> */}
 
             {renderContent()}
         </div>

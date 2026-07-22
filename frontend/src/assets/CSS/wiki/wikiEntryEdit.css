@@ -1,3 +1,10 @@
+:root {
+    --text: #ffffff;
+    /* --background: #1e1612; */
+    --background: #0c0a08;
+    --titleText: #e08855;
+}
+
 
 
 .wiki-edit-container {
@@ -15,7 +22,8 @@
   font-size: 2rem;
   text-align: left;
   font-weight: bold;
-  color: #1f2937;
+  /* color: var(--text); */
+  color: var(--titleText);
   margin-bottom: 1rem;
   border: none;
   /* margin-left: 2rem; */
@@ -27,6 +35,11 @@
 
 }
 
+.wiki-edit-wrapper {
+    padding-bottom: 5rem;
+    background-color: var(--background);
+}
+
 .blocks-droppable-zone {
     display: flex;
     flex-direction: column;
@@ -36,8 +49,8 @@
 .draggable-block-wrapper {
     display: flex;
     align-items: stretch;
-    background: #ffffff;
-    border: 1px solid #e2e8f0;
+    /* background: #ffffff; */
+    /* border: 1px solid #e2e8f0; */
     border-radius: 8px;
     transition: box-shadow 0.2s ease, border-color 0.2s ease;
 }
@@ -51,22 +64,23 @@
 /* Left Grip Drag Handle */
 .drag-handle {
     display: flex;
-    align-items: center;
-    justify-content: center;
+    margin-top: 1.5rem;
+    /* align-items: center; */
+    /* justify-content: center; */
     padding: 0 12px;
     font-size: 1.2rem;
     color: #94a3b8;
     cursor: grab;
     user-select: none;
-    border-right: 1px solid #f1f5f9;
-    background-color: #f8fafc;
+    /* border-right: 1px solid #f1f5f9; */
+    /* background-color: #f8fafc; */
     border-top-left-radius: 8px;
     border-bottom-left-radius: 8px;
 }
 
 .drag-handle:hover {
     color: #475569;
-    background-color: #f1f5f9;
+    /* background-color: #f1f5f9; */
 }
 
 .drag-handle:active {
@@ -75,4 +89,35 @@
 
 .block-content-area {
     flex: 1;
+}
+
+.add-block-toolbar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    /* width: auto; */
+
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+
+    height: 60px;
+    background-color: var(--background);
+    z-index: 1000;
+}
+
+.add-block-toolbar .add-block-btn {
+    background: transparent;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    color: #4f46e5;
+    transition: color 0.2s ease;
+    padding: 0.5rem 1rem;
+}
+
+.add-block-toolbar .add-block-btn:hover {
+    color: #4338ca;
+    background-color: #e0e7ff;
 }

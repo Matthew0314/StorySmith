@@ -17,4 +17,8 @@ public interface WikiEntryRepository extends JpaRepository<WikiEntry, Long> {
     Integer findMaxPositionByProjectIdAndCategoryId(@Param("projectId") Long projectId, @Param("categoryId") Long categoryId);
 
     List<WikiEntry> findByProjectIdAndCategoryId(Long projectId, Long categoryId);
+
+    void deleteByCategoryId(Long categoryId);
+
+    List<WikiEntry> findBySubcategoryId(Long subcategoryId);
 }

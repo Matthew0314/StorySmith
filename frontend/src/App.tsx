@@ -8,6 +8,7 @@ import ProtectedRoute from './components/protectedroute.tsx'
 import ProjectHomePage from './pages/projectHomePage.tsx'
 import Settings from './pages/settings.tsx'
 import WikiHome from "./pages/wikiHome.tsx"
+import WikiEdit from "./pages/WikiEdit.tsx"
 
 
 function App() {
@@ -49,6 +50,15 @@ function App() {
           element={
             <ProtectedRoute>
               <WikiHome />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/projects/:projectId/wiki/entries/:entryId/edit"
+          element={
+            <ProtectedRoute>
+              <WikiEdit />
             </ProtectedRoute>
           }
         />

@@ -27,6 +27,8 @@ import com.StorySmith.Story_Smith.repository.WikiEntryRepository;
 import com.StorySmith.Story_Smith.dto.WikiDTOs.SubcategoryDTO;
 import java.util.Comparator;
 
+import com.StorySmith.Story_Smith.model.WikiModels.WikiEntryComponent;
+import com.StorySmith.Story_Smith.model.WikiModels.components.ComponentType;
 
 
 @Service
@@ -132,7 +134,7 @@ public class WikiService {
         }
 
         newEntry.setPosition(maxPosition + 1);
-
+        setDefaultWikiComponenets(newEntry);
         wikiEntryRepository.save(newEntry);
         return ResponseEntity.ok("Wiki entry created successfully");
     }
@@ -152,6 +154,18 @@ public class WikiService {
 
         WikiSubcategory defaultSubcategory3 = wikiSubcategoryRepository.save(new WikiSubcategory(defaultCategory2, project, "Main Locations", 1));
         WikiSubcategory defaultSubcategory4 = wikiSubcategoryRepository.save(new WikiSubcategory(defaultCategory3, project, "Main Items", 2));
+    }
+
+
+    private void setDefaultWikiComponenets(WikiEntry entry) {
+        String defaultTextJson = "{\"title\": \"Overview\", \"textContent\": \"This is the default content for the wiki entry.\"}";
+        WikiEntryComponent defaultComponent = new WikiEntryComponent(entry, 1, ComponentType.TEXT, defaultTextJson);
+
+        String defaultQuoteJson = "{\"quoteText\": \"This is a default quote.\"}";
+        WikiEntryComponent defaultQuoteComponent = new WikiEntryComponent(entry, 2, ComponentType.QUOTE, defaultQuoteJson);
+
+        entry.addComponent(defaultComponent);
+        entry.addComponent(defaultQuoteComponent);
     }
 
 

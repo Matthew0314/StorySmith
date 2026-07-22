@@ -38,6 +38,7 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers("/api/projects/**").permitAll()
+                .requestMatchers("/api/wiki-entries/**").permitAll()
                 .anyRequest().authenticated()
             );
 

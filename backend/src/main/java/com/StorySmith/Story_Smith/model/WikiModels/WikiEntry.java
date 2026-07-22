@@ -1,5 +1,7 @@
 package com.StorySmith.Story_Smith.model.WikiModels;
 
+import org.springframework.core.annotation.Order;
+
 import com.StorySmith.Story_Smith.model.Projects;
 import com.StorySmith.Story_Smith.model.WikiModels.WikiCategory;
 
@@ -34,6 +36,10 @@ public class WikiEntry {
     // @Lob
     // @Column(name = "profile_picture", columnDefinition = "LONGBLOB")
     // private byte[] profilePicture;
+
+    @OneToMany(mappedBy = "wikiEntry", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("position ASC")
+    private java.util.List<WikiEntryComponent> components = new java.util.ArrayList<>();
 
     @Column(nullable = false)
     private int position;
@@ -113,6 +119,21 @@ public class WikiEntry {
         // For example, if you have a field called 'content', you can return that.
         return ""; // Placeholder implementation
     }
+
+
+    // Helper methods to keep bi-directional relationship in sync
+    public void addComponent(WikiEntryComponent component) {
+        components.add(component);
+        component.setWikiEntry(this);
+    }
+
+    public void removeComponent(WikiEntryComponent component) {
+        components.remove(component);
+        component.setWikiEntry(null);
+    }
+
+    public java.util.List<WikiEntryComponent> getComponents() { return components; }
+    public void setComponents(java.util.List<WikiEntryComponent> components) { this.components = components; }
 
 
 

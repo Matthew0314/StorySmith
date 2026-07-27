@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
 import "../assets/CSS/CreateProjectModal.css";
+import api from "../api/axiosConfig"; // Import the configured axios instance
 
 interface CreateProjectModalProps {
   isOpen: boolean;
@@ -31,8 +32,8 @@ export default function CreateProjectModal({
       const payload = JSON.parse(atob(token.split(".")[1]));
       const ownerId = payload.userId;
 
-      await axios.post(
-        "http://localhost:8080/api/projects/create",
+      await api.post(
+        `/projects/create`,
         {
           name,
           description,

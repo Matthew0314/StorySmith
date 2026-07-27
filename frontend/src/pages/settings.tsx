@@ -7,6 +7,8 @@ import { useNavigate } from "react-router-dom";
 import InviteUsers from "../components/settings/inviteUsers.tsx";
 import ProjectNavBar from "../components/ProjectNavBar.tsx";
 
+import api from "../api/axiosConfig"; // Import the configured axios instance
+
 interface Role {
     id: number;
     name: string;
@@ -66,14 +68,14 @@ export default function ProjectSettings() {
 
         try {
             // Pass raw axios query along with manually configured headers
-            const res = await axios.get(`http://localhost:8080/api/projects/${projectId}/settings`, {
+            const res = await api.get(`/projects/${projectId}/settings`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
             });
 
             const id = JSON.parse(atob(token.split(".")[1])).userId;
-            const roles = await axios.get(`http://localhost:8080/api/projects/${projectId}/roles/${id}`, {
+            const roles = await api.get(`/projects/${projectId}/roles/${id}`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -102,8 +104,8 @@ export default function ProjectSettings() {
         
 
         try {
-            const res = await axios.post(
-                `http://localhost:8080/api/projects/${projectId}/settings/ai`, 
+            const res = await api.post(
+                `/projects/${projectId}/settings/ai`, 
                 { enabled },
                 {
                     headers: {
@@ -122,8 +124,8 @@ export default function ProjectSettings() {
 
         try {
 
-            await axios.delete(
-                `http://localhost:8080/api/projects/${projectId}/settings/members/${userId}`,
+            await api.delete(
+                `/projects/${projectId}/settings/members/${userId}`,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`

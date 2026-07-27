@@ -3,6 +3,7 @@ import { useEffect, useRef, useState, ChangeEvent } from "react";
 import axios from "axios";
 import "../assets/CSS/ProjectHomePage.css";
 import ProjectNavBar from "../components/ProjectNavBar";
+import api from "../api/axiosConfig"; // Import the configured axios instance
 
 interface Project {
   id: number;
@@ -50,8 +51,8 @@ export default function ProjectHomePage() {
   useEffect(() => {
     const token = localStorage.getItem("token");
 
-    axios
-      .get(`http://localhost:8080/api/projects/${projectId}`, {
+    api
+      .get(`/projects/${projectId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -86,16 +87,12 @@ export default function ProjectHomePage() {
     formData.append("image", file);
 
     try {
-      const res = await fetch("http://localhost:8080/api/upload", {
-        method: "POST",
-        body: formData,
+      const res = await api.post("/upload", formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
       });
-
-      if (!res.ok) {
-        throw new Error(`Upload failed with status: ${res.status}`);
-      }
-
-      const data = await res.json();
+      const data = res.data;
 
       if (data.imageUrl) {
         setCoverImage(data.imageUrl);
@@ -103,14 +100,9 @@ export default function ProjectHomePage() {
         console.warn("Upload response missing 'imageUrl' key:", data);
       }
 
-      await axios.put(
-        `http://localhost:8080/api/projects/${projectId}/cover-image`,
-        { coverImage: data.imageUrl },
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
+      await api.put(
+        `/projects/${projectId}/cover-image`,
+        { coverImage: data.imageUrl }
       );
     } catch (err) {
       console.error("Image upload failed:", err);
@@ -129,7 +121,6 @@ export default function ProjectHomePage() {
     }
     const cleanPath = coverImage.startsWith("/") ? coverImage : `/${coverImage}`;
 
-    console.log("Resolved cover image URL:", `http://localhost:8080${cleanPath}`);
     return `http://localhost:8080${cleanPath}`;
   };
 

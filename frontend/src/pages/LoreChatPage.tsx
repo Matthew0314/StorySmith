@@ -4,6 +4,7 @@ import type { FormEvent } from 'react';
 
 import '../assets/CSS/LoreChatPage.css'; // Import pure CSS
 import ProjectNavBar from '../components/ProjectNavBar';
+import api from '../api/axiosConfig'; // Import the configured axios instance
 
 interface ChatMessage {
   id: number;
@@ -67,15 +68,10 @@ export default function LoreChatPage() {
         question: userQuery
       };
 
-      const response = await fetch('http://localhost:8080/api/ai/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(requestPayload),
-      });
+      const response = await api.post('/ai/chat', requestPayload);
+    
 
-      if (!response.ok) throw new Error('Backend communication failed');
-
-      const data: ChatResponse = await response.json();
+      const data: ChatResponse = response.data;
 
       const aiMessage: ChatMessage = {
         id: Date.now() + 1,

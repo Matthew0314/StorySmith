@@ -6,6 +6,7 @@ import "../assets/CSS/wikiHome.css";
 import WikiCards from "../components/WikiCards";
 import CategoryManagerModal, { type SavePayload } from "../components/wiki/CategoryManagerModal";
 import ProjectNavBar from "../components/ProjectNavBar";
+import api from "../api/axiosConfig"; // Import the configured axios instance
 
 interface WikiCategory {
     id: number;
@@ -55,12 +56,12 @@ export default function WikiHome() {
         if (!token || !projectId) return;
 
         try {
-            const res = await axios.get(`http://localhost:8080/api/projects/${projectId}/wiki/category`, {
+            const res = await api.get(`/projects/${projectId}/wiki/category`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
 
-            const subRes = await axios.get(
-                `http://localhost:8080/api/projects/${projectId}/wiki/subcategory`,
+            const subRes = await api.get(
+                `/projects/${projectId}/wiki/subcategory`,
                 { headers: { Authorization: `Bearer ${token}` } }
             );
 
@@ -84,7 +85,7 @@ export default function WikiHome() {
         if (!token || !projectId) return;   
 
         try {
-            const ent = await axios.get(`http://localhost:8080/api/projects/${projectId}/wiki/category/${categoryId}/entries`, {
+            const ent = await api.get(`/projects/${projectId}/wiki/category/${categoryId}/entries`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setEntries(ent.data);
@@ -98,8 +99,8 @@ export default function WikiHome() {
         if (!window.confirm("Are you sure you want to delete this entry?")) return;
 
         try {
-            await axios.delete(
-                `http://localhost:8080/api/projects/${projectId}/wiki/entries/${entryId}`,
+            await api.delete(
+                `/projects/${projectId}/wiki/entries/${entryId}`,
                 { headers: { Authorization: `Bearer ${token}` } }
             );
             if (selectedCategoryId) {
@@ -112,8 +113,8 @@ export default function WikiHome() {
 
     const handleSaveCategories = async (payload: SavePayload) => {
         try {
-            await axios.put(
-                `http://localhost:8080/api/projects/${projectId}/wiki/categories/batch`,
+            await api.put(
+                `/projects/${projectId}/wiki/categories/batch`,
                 payload,
                 { headers: { Authorization: `Bearer ${token}` } }
             );

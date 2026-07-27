@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import "../../assets/CSS/settings/inviteUsers.css";
+import api from "../../api/axiosConfig"; // Import the configured axios instance
 
 interface UserSearchDTO {
     id: number;
@@ -52,8 +53,8 @@ export default function InviteUsers({
             console.log("Searching for users with query:", query);
             console.log("Using id: ", projectId);
 
-            const res = await axios.get(
-                `http://localhost:8080/api/auth/members/search`,
+            const res = await api.get(
+                `/auth/members/search`,
                 {
                     params: {
                         projectId,
@@ -83,8 +84,8 @@ export default function InviteUsers({
     const invite = async (userId: number) => {
         try {
 
-            await axios.post(
-                `http://localhost:8080/api/projects/${projectId}/settings/members/${userId}`,
+            await api.post(
+                `/projects/${projectId}/settings/members/${userId}`,
                 { userId },
                 {
                     headers: {

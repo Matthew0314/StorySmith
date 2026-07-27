@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import '../assets/CSS/ProfilePage.css';
 import { jwtDecode } from 'jwt-decode';
 import axios from 'axios';
+import api from '../api/axiosConfig'; // Import the configured axios instance
 
 interface UserProfile {
   firstName: string;
@@ -56,7 +57,7 @@ export default function ProfilePage() {
     (async () => {
       try {
         const decoded = jwtDecode<MyJwtPayload>(token);
-        const res = await axios.get(`http://localhost:8080/api/auth/${decoded.userId}/profile`, {
+        const res = await api.get(`/auth/${decoded.userId}/profile`, {
             headers: {
             'Authorization': `Bearer ${token}`
             }

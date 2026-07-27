@@ -3,6 +3,7 @@ import axios from "axios";
 import CreateProjectModal from "../components/createProjectModal";
 import "../assets/CSS/projects.css"; // Import the CSS file for styling
 import { useNavigate } from "react-router-dom";
+import api from "../api/axiosConfig"; // Import the configured axios instance
   
 interface Project {
     id: number;
@@ -36,7 +37,7 @@ export default function Projects() {
 
         try {
             // Pass raw axios query along with manually configured headers
-            const res = await axios.get(`http://localhost:8080/api/projects/${currentUserId}/all`, {
+            const res = await api.get(`/projects/${currentUserId}/all`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }

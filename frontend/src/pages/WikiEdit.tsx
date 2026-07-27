@@ -11,6 +11,7 @@ import type { WikiEntryDTO } from "../components/WikiCards";
 import axios from "axios";
 import ProjectNavBar from "../components/ProjectNavBar";
 // import { title } from "process";
+import api from "../api/axiosConfig"; // Import the configured axios instance
 
 type SaveStatus = "saved" | "saving" | "unsaved" | "error";
 export default function WikiEdit() {
@@ -39,24 +40,22 @@ useEffect(() => {
         try {
             // 1. Fetch categories, subcategories, and entry data concurrently
             const [catRes, subRes, entryRes] = await Promise.all([
-                axios.get(`http://localhost:8080/api/projects/${projectId}/wiki/category`, {
+                api.get(`/projects/${projectId}/wiki/category`, {
                     headers: { Authorization: `Bearer ${token}` }
                 }),
-                axios.get(`http://localhost:8080/api/projects/${projectId}/wiki/subcategory`, {
+                api.get(`/projects/${projectId}/wiki/subcategory`, {
                     headers: { Authorization: `Bearer ${token}` }
                 }),
-                fetch(`http://localhost:8080/api/${projectId}/wiki-entries/${entryId}`, {
-                    method: "GET",
+                api.get(`/${projectId}/wiki-entries/${entryId}`, {
                     headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": `Bearer ${token}`
+                        Authorization: `Bearer ${token}`
                     }
                 })
             ]);
 
             const loadedCategories: WikiCategory[] = catRes.data || [];
             const loadedSubcategories: WikiSubcategory[] = subRes.data?.body || subRes.data || [];
-            const entryDataJson = await entryRes.json();
+            const entryDataJson = entryRes.data;
 
             let resolvedCatId = entryDataJson.categoryId ? Number(entryDataJson.categoryId) : 0;
 
@@ -299,16 +298,8 @@ const filteredSubcategories = useMemo(() => {
         formData.append("image", file);
 
         try {
-            const res = await fetch("http://localhost:8080/api/upload", {
-                method: "POST",
-                body: formData,
-            });
-
-            if (!res.ok) {
-                throw new Error(`Upload failed with status: ${res.status}`);
-            }
-
-            const data = await res.json();
+            const res = await api.post("http://localhost:8080/api/upload", formData);
+            const data = res.data;
 
             if (data.imageUrl) {
                 updateEntryState((prev) => ({

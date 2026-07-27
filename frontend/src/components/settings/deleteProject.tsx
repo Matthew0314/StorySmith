@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "../../assets/CSS/settings/deleteProject.css";
 import axios from "axios";
+import api from "../../api/axiosConfig"; // Import the configured axios instance
 
 interface DeleteProjectModalProps {
     isOpen: boolean;
@@ -27,8 +28,8 @@ export default function DeleteProject({ isOpen, projectId, projectName, onClose,
 
             const token = localStorage.getItem("token");
 
-            await axios.delete(
-                `http://localhost:8080/api/projects/${projectId}/settings`,
+            await api.delete(
+                `/projects/${projectId}/settings`,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`

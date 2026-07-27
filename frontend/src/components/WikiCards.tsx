@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../assets/CSS/wikiHome.css";
+// import "../assets/CSS/WikiCards.css";
 
 export interface WikiEntryDTO {
   id: number;
@@ -28,8 +29,8 @@ const EntryThumbnail = ({ src, alt }: { src: string; alt: string }) => {
 
   // Format URL: prepend backend base URL if it's a relative path
   const formattedSrc = src.startsWith("http")
-    ? src
-    : `http://localhost:8080${src.startsWith("/") ? "" : "/"}${src}`;
+  ? src
+  : `${import.meta.env.VITE_BACKEND_URL}${src.startsWith("/") ? "" : "/"}${src}`;
 
   if (imageError) {
     return (

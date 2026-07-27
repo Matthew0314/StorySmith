@@ -1,5 +1,4 @@
 import type { WikiBlock } from "../types/WikiBlocks";
-import React from "react";
 // import "../../assets/CSS/wikiBlockRenderer.css";
 import WikiTextBlock from "../components/wiki/WikiComponents/wikiTextBlock";
 import QuoteBlockComponent from "../components/wiki/WikiComponents/wikiQuoteBlock";

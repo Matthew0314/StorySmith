@@ -45,7 +45,7 @@ export interface EntryData {
     id: number;
     title: string;
     categoryName: string;
-    subCategoryName?: string;
+    subCategoryName?: string | null;
     blocks: WikiBlock[];
     imageUrl?: string;
 }

@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
 import CreateProjectModal from "../components/createProjectModal";
 import "../assets/CSS/projects.css"; // Import the CSS file for styling
 import { useNavigate } from "react-router-dom";
@@ -190,17 +189,3 @@ export default function Projects() {
     );
 }
 
-const gridStyle: React.CSSProperties = {
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))",
-    gap: "16px",
-    marginBottom: "40px"
-};
-
-const cardStyle: React.CSSProperties = {
-    border: "1px solid #ccc",
-    borderRadius: "6px",
-    padding: "16px",
-    backgroundColor: "#fafafa",
-    color: "#333"
-};

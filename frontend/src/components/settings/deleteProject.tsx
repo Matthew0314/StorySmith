@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import "../../assets/CSS/settings/deleteProject.css";
-import axios from "axios";
+// import axios from "axios";
 import api from "../../api/axiosConfig"; // Import the configured axios instance
 
 interface DeleteProjectModalProps {

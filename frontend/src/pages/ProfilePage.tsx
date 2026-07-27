@@ -1,8 +1,7 @@
-import React, { useState, useRef, useEffect, type ChangeEvent } from 'react';
+import { useState, useRef, useEffect, type ChangeEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../assets/CSS/ProfilePage.css';
 import { jwtDecode } from 'jwt-decode';
-import axios from 'axios';
 import api from '../api/axiosConfig'; // Import the configured axios instance
 
 interface UserProfile {
@@ -164,10 +163,10 @@ export default function ProfilePage() {
     }
   };
 
-  const handleCancel = () => {
-    setProfile(initialProfile);
-    setHasChanges(false);
-  };
+//   const handleCancel = () => {
+//     setProfile(initialProfile);
+//     setHasChanges(false);
+//   };
 
   const handleLogout = () => {
     localStorage.removeItem('token');

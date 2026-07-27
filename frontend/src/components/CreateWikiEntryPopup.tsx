@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo } from "react";
 import "../assets/CSS/CreateWikiEntryPopup.css";
 import axios from "axios";
 
@@ -25,7 +25,7 @@ export default function CreateWikiEntryPopup({
   const [title, setTitle] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<number | string>("");
   const [selectedSubcategory, setSelectedSubcategory] = useState<number | string>("");
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
+//   const [imagePreview, setImagePreview] = useState<string | null>(null);
 
   const safeCategories = Array.isArray(categories) ? categories : [];
   const safeSubcategories = Array.isArray(subcategories) ? subcategories : [];
@@ -68,12 +68,12 @@ export default function CreateWikiEntryPopup({
   // EARLY RETURN MUST BE BELOW ALL HOOKS
   if (!isOpen) return null;
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setImagePreview(URL.createObjectURL(file));
-    }
-  };
+  // const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   const file = e.target.files?.[0];
+  //   if (file) {
+  //     setImagePreview(URL.createObjectURL(file));
+  //   }
+  // };
 
   const createEntry = async () => {
     const activeCategory = selectedCategory || initialCategoryId;
@@ -106,7 +106,7 @@ export default function CreateWikiEntryPopup({
 
       setLoading(false);
       setTitle("");
-      setImagePreview(null);
+      // setImagePreview(null);
       setSelectedSubcategory("");
       onEntryCreated();
       onClose();

@@ -7,9 +7,9 @@ import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import type { DropResult } from "@hello-pangea/dnd";
 import { Link } from "react-router-dom"
 import type { WikiCategory, WikiSubcategory } from "../components/wiki/CategoryManagerModal";
-import type { WikiEntryDTO } from "../components/WikiCards";
-import axios from "axios";
-import ProjectNavBar from "../components/ProjectNavBar";
+// import type { WikiEntryDTO } from "../components/WikiCards";
+// import axios from "axios";
+// import ProjectNavBar from "../components/ProjectNavBar";
 // import { title } from "process";
 import api from "../api/axiosConfig"; // Import the configured axios instance
 
@@ -25,10 +25,10 @@ export default function WikiEdit() {
         const token = localStorage.getItem("token");
     const [categories, setCategories] = useState<WikiCategory[]>([]);
     const [subcategories, setSubcategories] = useState<WikiSubcategory[]>([]);
-    const [entries, setEntries] = useState<WikiEntryDTO[]>([]);
-    const [isCreateOpen, setIsCreateOpen] = useState(false);
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(null);
+    // const [entries, setEntries] = useState<WikiEntryDTO[]>([]);
+    // const [isCreateOpen, setIsCreateOpen] = useState(false);
+    // const [isModalOpen, setIsModalOpen] = useState(false);
+    // const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(null);
     const [selectedSubcategory, setSelectedSubcategory] = useState<number | string>("");
     const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
     const [imagePreview, setImagePreview] = useState<string | null>(null);
@@ -119,17 +119,14 @@ useEffect(() => {
             console.log("Auto-saving entry data:", entryData);
             // return;
             try {
-                const response = await fetch(`http://localhost:8080/api/${projectId}/wiki-entries/${entryId}`, {
-                    method: "PUT",
+                await api.put(`/${projectId}/wiki-entries/${entryId}`, entryData, {
                     headers: {
                         "Content-Type": "application/json",
                         "Authorization": `Bearer ${localStorage.getItem("token")}`
                     },
-                    body: JSON.stringify(entryData)
-        
                 });
 
-                if (!response.ok) throw new Error("Failed to auto-save");
+                // if (!response) throw new Error("Failed to auto-save");
 
                 setSaveStatus("saved");
             } catch (error) {
@@ -154,9 +151,17 @@ useEffect(() => {
             data: {
                 title: "",
                 textContent: ""
-            }
+            },
+            position: entryData ? entryData.blocks.length : 0,
         };
-        setEntryData({ ...entryData, blocks: [...entryData.blocks, newBlock] });
+        setEntryData(prev => {
+            if (!prev) return prev;
+
+            return {
+                ...prev,
+                blocks: [...prev.blocks, newBlock]
+            };
+        });
     };
 
     const addStatBlock = () => {
@@ -173,9 +178,17 @@ useEffect(() => {
                     { id: "stat4", label: "Intelligence", value: 50 },
                     { id: "stat5", label: "Endurance", value: 50 }
                 ]
-            }
+            },
+            position: entryData ? entryData.blocks.length : 0,
         };
-        setEntryData({ ...entryData, blocks: [...entryData.blocks, newBlock] });
+        setEntryData(prev => {
+            if (!prev) return prev;
+
+            return {
+                ...prev,
+                blocks: [...prev.blocks, newBlock]
+            };
+        });
     };
 
     // 2. Add Quote Block
@@ -185,10 +198,18 @@ useEffect(() => {
             type: "quote",
             data: {
                 quoteText: "",
-                author: ""
-            }
+                title: ""
+            },
+            position: entryData ? entryData.blocks.length : 0,
         };
-        setEntryData({ ...entryData, blocks: [...entryData.blocks, newBlock] });
+        setEntryData(prev => {
+            if (!prev) return prev;
+
+            return {
+                ...prev,
+                blocks: [...prev.blocks, newBlock]
+            };
+        });
     };
 
     const handleBlockChange = (index: number, updatedBlock: TextBlock | QuoteBlock | StatBlock) => {
@@ -234,7 +255,7 @@ useEffect(() => {
 
 
 
-    const safeSubcategories = Array.isArray(subcategories) ? subcategories : [];
+    // const safeSubcategories = Array.isArray(subcategories) ? subcategories : [];
     // const fetchCategoryData = async () => {
     //     if (!token || !projectId) return;
 
@@ -298,7 +319,7 @@ const filteredSubcategories = useMemo(() => {
         formData.append("image", file);
 
         try {
-            const res = await api.post("http://localhost:8080/api/upload", formData);
+            const res = await api.post("/upload", formData);
             const data = res.data;
 
             if (data.imageUrl) {

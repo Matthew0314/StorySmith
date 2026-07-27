@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
 import "../../assets/CSS/settings/inviteUsers.css";
 import api from "../../api/axiosConfig"; // Import the configured axios instance
 

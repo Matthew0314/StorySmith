@@ -1,5 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
-import axios from "axios";
+import React, { useState } from "react";
 import "../assets/CSS/CreateProjectModal.css";
 import api from "../api/axiosConfig"; // Import the configured axios instance
 

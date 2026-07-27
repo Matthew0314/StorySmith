@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState } from "react";
 import {
     Radar,
     RadarChart,
@@ -23,7 +23,7 @@ interface StatBlockProps {
     onDelete?: () => void; // Optional delete handler for individual stats
 }
 
-export default function StatBlockComponent({ id, data, onChange, readOnly = false, onDelete }: StatBlockProps) {
+export default function StatBlockComponent({ data, onChange, readOnly = false, onDelete }: StatBlockProps) {
 
     const { maxValue = 100, stats = [] } = data;
     const [newStatName, setNewStatName] = useState("");

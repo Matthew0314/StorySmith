@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import "../../assets/CSS/wiki/categoryManagerModal.css";
 
 export interface WikiCategory {

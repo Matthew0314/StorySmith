@@ -11,7 +11,6 @@ import ProjectHomePage from './pages/projectHomePage.tsx'
 import Settings from './pages/settings.tsx'
 import WikiHome from "./pages/wikiHome.tsx"
 import WikiEdit from "./pages/WikiEdit.tsx"
-import ProjectNavBar from './components/ProjectNavBar.tsx'
 
 
 function App() {

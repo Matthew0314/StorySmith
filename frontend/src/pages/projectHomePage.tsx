@@ -1,9 +1,9 @@
 import { Link, useParams } from "react-router-dom";
-import { useEffect, useRef, useState, ChangeEvent } from "react";
-import axios from "axios";
+import { useEffect, useRef, useState } from "react";
 import "../assets/CSS/ProjectHomePage.css";
 import ProjectNavBar from "../components/ProjectNavBar";
 import api from "../api/axiosConfig"; // Import the configured axios instance
+import type { ChangeEvent } from "react";
 
 interface Project {
   id: number;

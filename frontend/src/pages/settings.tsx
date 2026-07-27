@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import "../assets/CSS/settings.css";
-import axios from "axios";
 import DeleteProjectModal from "../components/settings/deleteProject.tsx";
 import { useNavigate } from "react-router-dom";
 import InviteUsers from "../components/settings/inviteUsers.tsx";
@@ -36,7 +35,7 @@ export default function ProjectSettings() {
 
     const { projectId } = useParams();
 
-    const [aiEnabled, setAiEnabled] = useState();
+    const [aiEnabled, setAiEnabled] = useState<boolean>(false);
 
     const [deleteOpen, setDeleteOpen] = useState(false);
 

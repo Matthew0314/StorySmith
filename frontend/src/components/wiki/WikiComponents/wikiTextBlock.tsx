@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import { useRef, useEffect } from 'react';
 import '../../../assets/CSS/wiki/WikiComponenets/wikiTextBlock.css';
 
 interface TextBlockProps {

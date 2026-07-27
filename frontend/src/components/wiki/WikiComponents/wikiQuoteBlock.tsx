@@ -1,21 +1,21 @@
-import React, { useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import "../../../assets/CSS/wiki/WikiComponenets/wikiQuoteBlock.css";
 
-interface QuoteBlock {
+interface QuoteBlockProps {
     block: {
         id: number | string;
         type: "quote";
         data: {
             quoteText: string;
             // title: string;
-            author?: string; // Optional author field
+            title: string; // Optional author field
         };
     };
-    onChange: (updatedData: { quoteText: string; author?: string }) => void;
+    onChange: (updatedData: { quoteText: string; title: string}) => void;
     onDelete?: () => void; // Optional delete handler
 }
 
-export default function WikiQuoteBlock({ block, onChange, onDelete }: QuoteBlock) {
+export default function WikiQuoteBlock({ block, onChange, onDelete }: QuoteBlockProps) {
 
     const textareaRef = useRef<HTMLTextAreaElement>(null);
     
@@ -42,7 +42,7 @@ export default function WikiQuoteBlock({ block, onChange, onDelete }: QuoteBlock
                     className="quote-block-content-textarea"
                     ref={textareaRef}
                     rows={1}
-                    onChange={(e) => onChange({ quoteText: e.target.value, author: block.data.author })}
+                    onChange={(e) => onChange({ quoteText: e.target.value, title: block.data.title })}
                 />
                 <button
                         type="button"
@@ -55,10 +55,10 @@ export default function WikiQuoteBlock({ block, onChange, onDelete }: QuoteBlock
                 </div>
             <input
                 type="text"
-                value={block.data.author || ""}
+                value={block.data.title || ""}
                 placeholder="Author (optional)"
                 className="quote-block-author-input"
-                onChange={(e) => onChange({ quoteText: block.data.quoteText, author: e.target.value })}
+                onChange={(e) => onChange({ quoteText: block.data.quoteText, title: e.target.value })}
             />
         </div>
     );

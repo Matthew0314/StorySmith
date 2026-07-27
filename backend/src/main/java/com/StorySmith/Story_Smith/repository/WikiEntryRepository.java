@@ -21,4 +21,6 @@ public interface WikiEntryRepository extends JpaRepository<WikiEntry, Long> {
     void deleteByCategoryId(Long categoryId);
 
     List<WikiEntry> findBySubcategoryId(Long subcategoryId);
+
+    List<WikiEntry> findByProjectId(Long projectId);
 }

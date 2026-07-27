@@ -1,6 +1,6 @@
 /* Container & Layout Spacing */
 .wiki-container {
-  max-width: 64rem; /* 1024px */
+  /* max-width: 64rem;  */
   width: 100%;       /* ALWAYS force full width so margin-auto doesn't collapse it */
   margin-left: auto;
   margin-right: auto;
@@ -10,15 +10,25 @@
   gap: 2rem;
   font-family: system-ui, -apple-system, sans-serif;
   box-sizing: border-box;
+  background-color: var(--backgroundColor);
 }
 
 /* Header Section */
 .wiki-header {
-  border-bottom: 1px solid #e5e7eb;
-  padding-bottom: 1.25rem;
+  /* border-bottom: 1px solid #e5e7eb; */
+  /* padding-bottom: 1.25rem; */
   display: flex;
   align-items: center;
   justify-content: space-between;
+}
+
+.header-container {
+  display:grid;
+  /* flex-direction: column; */
+  grid-template-columns: auto 1fr;
+  width: 100%;
+  gap: 0.5rem;
+  /* justify-content: center; */
 }
 
 .wiki-header, 
@@ -33,6 +43,8 @@
   letter-spacing: -0.025em;
   color: #111827;
   margin: 0;
+  text-align: left;
+
 }
 
 .wiki-subtitle {
@@ -50,7 +62,7 @@
   font-size: 0.875rem;
   font-weight: 500;
   color: #ffffff;
-  background-color: #4f46e5;
+  background-color: var(--cardBackground);
   border: none;
   border-radius: 0.5rem;
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
@@ -59,7 +71,7 @@
 }
 
 .btn-create:hover {
-  background-color: #4338ca;
+  background-color: var(--cardButton1);
 }
 
 .btn-create:focus {
@@ -89,6 +101,11 @@
   gap: 0.5rem;
 }
 
+.categories-page {
+    display: flex;
+    justify-content: flex-end;
+}
+
 .category-pill {
   padding: 0.5rem 1rem;
   border-radius: 9999px;
@@ -106,7 +123,7 @@
 }
 
 .category-pill.selected {
-  background-color: #4f46e5;
+  background-color: var(--cardButton1);
   color: #ffffff;
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
 }
@@ -157,23 +174,38 @@
   align-content: start; /* Prevents vertical stretching */
 }
 
-@media (min-width: 768px) {
+/* 1. Smallest breakpoint first */
+@media (min-width: 1000px) {
   .entries-grid {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
+/* 2. Medium breakpoint second */
+@media (min-width: 1250px) {
+  .entries-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* 3. Largest breakpoint last */
+@media (min-width: 1650px) {
+  .entries-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
 .entry-card {
-  background-color: #141212;
+  background-color: var(--cardBackground);
   border: 1px solid #2a2421;
   border-radius: 0.75rem;
   overflow: hidden;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  /* box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); */
   color: #e7e5e4;
   font-family: Georgia, Cambria, "Times New Roman", Times, serif;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+
 }
 
 .card-top {
@@ -196,6 +228,17 @@
   border-radius: 0.125rem;
   padding: 0.25rem;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  overflow: hidden; /* Keeps image corners rounded if frame has border-radius */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.entry-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Crops image neatly to fill the frame without stretching */
+  display: block;
 }
 
 .image-placeholder {
@@ -305,7 +348,7 @@
 /* Card Action Footer */
 .card-footer {
   border-top: 1px solid #2a2421;
-  background-color: #100e0e;
+  background-color: var;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   font-size: 11px;
@@ -336,12 +379,14 @@
 
 .action-btn:hover {
   color: #f5f5f4;
-  background-color: rgba(41, 37, 36, 0.4);
+  /* background-color: rgba(41, 37, 36, 0.4); */
+  background-color: var(--cardButton1);
 }
 
 .action-btn.discard:hover {
-  color: #f87171;
-  background-color: rgba(69, 10, 10, 0.2);
+  /* color: #f87171; */
+  /* background-color: rgba(69, 10, 10, 0.2); */
+  background-color: #f871713d;
 }
 
 .action-icon {

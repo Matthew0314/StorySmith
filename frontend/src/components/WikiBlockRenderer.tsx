@@ -20,6 +20,7 @@ export default function WikiBlockRenderer({ block, onBlockChange, onDelete }: Wi
                     block={block} 
                     // Pass the function here!
                     onChange={(updatedData) => onBlockChange({ ...block, data: updatedData })} 
+                    onDelete={onDelete}
                 />
             );
         case "quote":
@@ -27,6 +28,7 @@ export default function WikiBlockRenderer({ block, onBlockChange, onDelete }: Wi
                 <QuoteBlockComponent
                     block={block}
                     onChange={(updatedData) => onBlockChange({ ...block, data: updatedData })}
+                    onDelete={onDelete}
                 />
             );
         case "stats":

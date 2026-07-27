@@ -11,4 +11,8 @@ public interface WikiCategoryRepository extends JpaRepository<WikiCategory, Long
     
 
     List<WikiCategory> findByProjectId(Long projectId);
+
+    WikiCategory findByIdAndProjectId(Long categoryId, Long projectId);
+
+    WikiCategory findByProjectIdAndName(Long projectId, String name);
 }

@@ -40,6 +40,9 @@ public class ProjectService {
     @Autowired
     private WikiService wikiService;
 
+    @Autowired
+    private WikiEntryService wikiEntryService;
+
     public List<Projects> GetOwnedProjects(Long userId) {
         return projectRepository.findOwnedProjectsByUserId(userId);
     }
@@ -102,6 +105,29 @@ public class ProjectService {
                 .toList();
 
         return projectRoles;
+    }
+
+    public ResponseEntity<?> UpdateCoverImage(Long projectId, String coverImage) {
+        Projects project = projectRepository.findById(projectId).orElse(null);
+        if (project == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", "Project not found"));
+        }
+
+        if (coverImage == null || coverImage.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", "Cover image URL cannot be empty"));
+        }
+
+        if (project.getCoverImage() != null && !project.getCoverImage().equals(coverImage)) {
+
+            wikiEntryService.deleteFile(project.getCoverImage());
+            // Optionally, delete the old cover image file from the server if needed
+            // deleteFile(project.getCoverImage());
+        }
+        project.setCoverImage(coverImage);
+        projectRepository.save(project);
+        return ResponseEntity.ok(Map.of("message", "Cover image updated successfully"));
+
+
     }
 
 

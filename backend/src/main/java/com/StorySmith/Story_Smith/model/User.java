@@ -20,6 +20,12 @@ public class User {
     @Column(nullable = false, unique = true, length = 50)
     private String username;
 
+    @Column(nullable = false, length = 50)
+    private String firstName;
+
+    @Column(nullable = false, length = 50)
+    private String lastName;
+
     @Column(nullable = false)
     private String password;
 
@@ -30,14 +36,19 @@ public class User {
     @CreationTimestamp
     private LocalDateTime createdAt;
 
+    @Column(name = "profile_url")
+    private String profileUrl; // New field for storing the profile URL
+
     public User() {
 
     }
 
 
-    public User(String email, String username, String password, UserRole role) {
+    public User(String email, String username, String firstName, String lastName, String password, UserRole role) {
         this.email = email;
         this.username = username;
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.password = password;
         this.role = role;
     }
@@ -89,4 +100,28 @@ public class User {
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }   
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getProfileUrl() {
+        return profileUrl;
+    }
+
+    public void setProfileUrl(String profileUrl) {
+        this.profileUrl = profileUrl;
+    }
 }

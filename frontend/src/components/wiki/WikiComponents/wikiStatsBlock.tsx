@@ -18,7 +18,7 @@ interface StatBlockProps {
         maxValue: number;
         stats: StatItem[];
     };
-    onChange?: (newData: { maxValue: number; stats: StatItem[] }) => void;
+    onChange?: (newData: { title: string; maxValue: number; stats: StatItem[] }) => void;
     readOnly?: boolean; // Set to true if viewing without edit permissions
     onDelete?: () => void; // Optional delete handler for individual stats
 }
@@ -33,6 +33,7 @@ export default function StatBlockComponent({ id, data, onChange, readOnly = fals
     const updateStats = (newStats: StatItem[]) => {
         if (onChange) {
             onChange({
+                title: data.title,
                 maxValue,
                 stats: newStats,
             });
@@ -200,8 +201,8 @@ export default function StatBlockComponent({ id, data, onChange, readOnly = fals
                             <PolarGrid stroke="#443328" />
                             <PolarAngleAxis
                                 dataKey="label"
-                                stroke="#e08855"
-                                tick={{ fill: "#e08855", fontSize: 13, fontFamily: "serif" }}
+                                stroke="var(--wikiEdit-statsColor)"
+                                tick={{ fill: "var(--wikiEdit-statsColor)", fontSize: 13, fontFamily: "serif" }}
                             />
                             <PolarRadiusAxis
                                 angle={90}
@@ -212,8 +213,8 @@ export default function StatBlockComponent({ id, data, onChange, readOnly = fals
                             <Radar
                                 name="Stats"
                                 dataKey="value"
-                                stroke="#e08855"
-                                fill="#e08855"
+                                stroke="var(--wikiEdit-statsColor)"
+                                fill="var(--wikiEdit-statsColor)"
                                 fillOpacity={0.35}
                                 isAnimationActive={false}
                             />

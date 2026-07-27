@@ -5,6 +5,7 @@ import CreateWikiEntryPopup from "../components/CreateWikiEntryPopup";
 import "../assets/CSS/wikiHome.css";
 import WikiCards from "../components/WikiCards";
 import CategoryManagerModal, { type SavePayload } from "../components/wiki/CategoryManagerModal";
+import ProjectNavBar from "../components/ProjectNavBar";
 
 interface WikiCategory {
     id: number;
@@ -26,6 +27,8 @@ interface WikiEntryDTO {
     position: number;
     subCategoryName: string;
     categoryName: string;
+    imageUrl?: string; // Optional image URL field
+    summary?: string; // Optional summary field
 }
 
 export default function WikiHome() {
@@ -85,6 +88,7 @@ export default function WikiHome() {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setEntries(ent.data);
+            console.log("Fetched entries for category:", ent.data);
         } catch (err) {
             console.error("Error fetching wiki entries for category:", err);
         }
@@ -122,32 +126,33 @@ export default function WikiHome() {
 
     return (
         <>
-            <div className="categories-page">
-                <button onClick={() => setIsModalOpen(true)} className="btn btn-primary">
-                    ⚙️ Manage Categories
-                </button>
-
-                <CategoryManagerModal
-                    isOpen={isModalOpen}
-                    categories={categories}
-                    subcategories={subcategories}
-                    onClose={() => setIsModalOpen(false)}
-                    onSave={handleSaveCategories}
-                />
-            </div>
-
+            
+            <ProjectNavBar />
+        
             <div className="wiki-container">
                 <div className="wiki-header">
-                    <div>
-                        <h1 className="wiki-title">Wiki Home Page</h1>
-                        <p className="wiki-subtitle">
+                    <div className="header-container">
+                        <h1 className="wiki-title">Wiki</h1>
+                        {/* <p className="wiki-subtitle">
                             Welcome to the Wiki Home Page. Manage and view all documentation for your project.
-                        </p>
+                        </p> */}
+                        <div className="categories-page">
+                            <button onClick={() => setIsModalOpen(true)} className="btn btn-primary">
+                                ⚙️ Manage Categories
+                            </button>
+
+                            <CategoryManagerModal
+                                isOpen={isModalOpen}
+                                categories={categories}
+                                subcategories={subcategories}
+                                onClose={() => setIsModalOpen(false)}
+                                onSave={handleSaveCategories}
+                            />
+                        </div>
                     </div>
                 </div>
 
                 <div className="categories-section">
-                    <h2 className="section-label">Categories</h2>
                     {categories.length > 0 ? (
                         <div className="categories-list">
                             {categories.map((category) => {

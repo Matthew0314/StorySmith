@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { loginUser } from "../../api/auth";
 import { Link } from "react-router-dom";
 // import Navbar from "../components/Navbar";
+import "../../assets/CSS/Auth.css";
 
 
 function Login() {
@@ -38,32 +39,56 @@ function Login() {
     };
 
     return (
-        <div className="Login">
+        <div className="auth-container">
+        <div className="auth-card">
+            
+            <header className="auth-header">
+            <h1>Welcome Back</h1>
+            <p>Enter your credentials to access your workspace</p>
+            </header>
 
-            <h1>Login</h1>
-
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} className="auth-form">
+            <div className="form-group">
+                <label className="auth-label">Email</label>
                 <input
-                    placeholder="Email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                type="email"
+                placeholder="you@example.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="auth-input"
+                required
                 />
+            </div>
 
+            <div className="form-group">
+                <label className="auth-label">Password</label>
                 <input
-                    placeholder="Password"
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
+                type="password"
+                placeholder="••••••••"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="auth-input"
+                required
                 />
+            </div>
 
-                <button type="submit">Login</button>
+            <button type="submit" className="btn-auth-submit">
+                Login
+            </button>
             </form>
 
-            {message && <p>{message}</p>}
+            {message && <div className="auth-message">{message}</div>}
 
-            <div>
-                <p>Don't have an account? <Link to="/register">Register here</Link></p> 
-            </div>
+            <footer className="auth-footer">
+            <p>
+                Don't have an account?{' '}
+                <Link to="/register" className="auth-link">
+                Register here
+                </Link>
+            </p>
+            </footer>
+
+        </div>
         </div>
     );
 }

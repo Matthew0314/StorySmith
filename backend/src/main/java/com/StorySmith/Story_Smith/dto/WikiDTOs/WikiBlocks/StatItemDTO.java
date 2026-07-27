@@ -37,5 +37,5 @@ public class StatItemDTO {
     public void setValue(Integer value) {
         this.value = value;
     }
-    
+
 }

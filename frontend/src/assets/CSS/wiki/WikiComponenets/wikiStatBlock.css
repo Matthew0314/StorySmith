@@ -1,20 +1,21 @@
 .stat-block-container {
     /* background-color: #0c0b0b; */
-    color: #e08855;
-    padding: 24px;
+    color: var(--wikiEdit-titleText);
+    padding: 24px var(--componentRightPadding) 24px var(--componentLeftPadding);
     /* border-radius: 8px; */
-    font-family: Georgia, serif;
-    max-width: 900px;
+    /* font-family: Georgia, serif; */
+    font-family: var(--componentFont);
+    max-width: 100%;
     /* margin: 20px auto; */
 }
 
-.stat-block-title {
+/* .stat-block-title {
     font-size: 1.5rem;
     letter-spacing: 4px;
     border-bottom: 1px solid #443328;
     padding-bottom: 8px;
     margin-bottom: 20px;
-}
+} */
 
 .stat-error {
     color: #ff6b6b;
@@ -46,7 +47,7 @@
 .stat-name-input {
     background: transparent;
     border: none;
-    color: #d1d1d1;
+    color: var(--wikiEdit-text);
     font-size: 1rem;
     font-family: inherit;
     width: 110px;
@@ -54,17 +55,17 @@
 
 .stat-name-input:focus {
     outline: none;
-    border-bottom: 1px solid #e08855;
+    border-bottom: 1px solid var(--wikiEdit-titleText);
 }
 
 .colon {
-    color: #e08855;
+    color: var(--wikiEdit-statsColor);
 }
 
 /* Custom Styled Slider Range */
 .stat-slider {
     flex: 1;
-    accent-color: #e08855;
+    accent-color: var(--wikiEdit-statsColor);
     cursor: pointer;
     background: #2a201b;
     height: 4px;
@@ -74,7 +75,7 @@
 .stat-value {
     width: 32px;
     text-align: right;
-    color: #d1d1d1;
+    color: var(--wikiEdit-text);
 }
 
 .delete-stat-btn {
@@ -128,8 +129,8 @@
 
 .add-stat-btn {
     background: #1e1612;
-    border: 1px solid #e08855;
-    color: #e08855;
+    border: 1px solid var(--wikiEdit-titleText);
+    color: var(--wikiEdit-titleText);
     padding: 6px 16px;
     border-radius: 4px;
     cursor: pointer;
@@ -138,7 +139,7 @@
 }
 
 .add-stat-btn:hover {
-    background: #e08855;
+    background: var(--wikiEdit-titleText);
     color: #0c0b0b;
 }
 
@@ -147,17 +148,7 @@
     min-width: 300px;
 }
 
-.stat-block-title-input {
-    font-size: 1.5rem;
-    letter-spacing: 4px;
-    border: none;
-    border-bottom: 1px solid #443328;
-    padding-bottom: 8px;
-    margin-bottom: 20px;
-    background: transparent;
-    color: #e08855;
-    width: 100%
-}
+
 
 .stat-block-maxValue-input {
     font-size: 1rem;
@@ -167,7 +158,7 @@
     margin-bottom: 12px;
     margin-left: 8px;
     background: transparent;
-    color: #e08855;
+    color: var(--wikiEdit-text);
     width: 20%;
     text-align: center;
 

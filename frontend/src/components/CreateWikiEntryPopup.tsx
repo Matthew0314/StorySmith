@@ -183,7 +183,7 @@ export default function CreateWikiEntryPopup({
             </div>
           </div>
 
-          <div className="form-group">
+          {/* <div className="form-group">
             <label className="form-label">Cover Artwork</label>
             <div className="image-upload-wrapper">
               <div className="image-preview-frame">
@@ -223,7 +223,7 @@ export default function CreateWikiEntryPopup({
                 />
               </label>
             </div>
-          </div>
+          </div> */}
         </div>
 
         <div className="modal-footer">

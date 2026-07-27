@@ -88,18 +88,24 @@ export default function Projects() {
     }
 
     return (
-        <div style={{ padding: "20px" }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <h1>Projects Dashboard</h1>
-                <button onClick={() => setIsModalOpen(true)} style={{ padding: "10px 16px", cursor: "pointer" }}>
-                    + New Project
-                </button>
+        <div style={{ padding: "20px", backgroundColor: "var(--homeBackground)", minHeight: "100vh" }}>
+            <div className="top-wrapper">
+                <div className="projects-title">
+                    <h1>Projects Dashboard</h1>
+                </div>
+                <div className="button-wrapper">
+                    <button onClick={() => setIsModalOpen(true)} className="new-project-button">
+                        + New Project
+                    </button>
+                    <button onClick={() => navigate(`/profile`)} className="new-project-button">
+                        Profile
+                    </button>
+                </div>
             </div>
 
             <hr />
 
             {/* --- OWNED --- */}
-            <h2>My Projects (Owner)</h2>
             {/* {ownedProjects.length === 0 ? <p>You haven't created any projects yet.</p> : (
                 <div style={gridStyle}>
                     {ownedProjects.map(project => (
@@ -110,55 +116,68 @@ export default function Projects() {
                     ))}
                 </div>
             )} */}
-            <div className="bookshelf">
-                {ownedProjects
-                .filter(project => !project.deleted)
-                .map(project => (
-                    <div className="book" 
-                    key={project.id} 
-                    onClick={() => navigate(`/projects/${project.id}`)}>
-                        <div className="book-inner">
+            <div className="bookshelf-wrapper">
+                <div className="bookshelf-container">
+                    <h2>My Projects</h2>
 
-                            <div className="book-spine"
-                                style={{ background: createBookGradient(project.color) }}>
-                                <span>{project.name}</span>
-                            </div>
+                    <div className="outer-bookshelf">
+                        <div className="bookshelf">
+                            {ownedProjects
+                            .filter(project => !project.deleted)
+                            .map(project => (
+                                <div className="book" 
+                                key={project.id} 
+                                onClick={() => navigate(`/projects/${project.id}`)}>
+                                    <div className="book-inner">
 
-                            <div className="book-cover">
-                                <h3>{project.name}</h3>
-                                {/* <p>{project.description}</p> */}
-                            </div>
+                                        <div className="book-spine"
+                                            style={{ background: createBookGradient(project.color) }}>
+                                            <span>{project.name}</span>
+                                        </div>
 
+                                        <div className="book-cover">
+                                            <h3>{project.name}</h3>
+                                            <p>{project.description}</p>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            ))}
                         </div>
                     </div>
-                ))}
-            </div>
-
-            {/* --- COLLABORATOR --- */}
-            <h2>Collaborations</h2>
-            {collaboratorProjects.length === 0 ? <p>You are not a collaborator on any projects.</p> : (
-                <div className="bookshelf">
-                    {collaboratorProjects
-                    .filter(project => !project.deleted)
-                    .map(project => (
-                        <div className="book" key={project.id} onClick={() => navigate(`/projects/${project.id}`)}>
-                            <div className="book-inner">
-
-                                <div className="book-spine"
-                                    style={{ background: createBookGradient(project.color) }}>
-                                    <span>{project.name}</span>
-                                </div>
-
-                                <div className="book-cover">
-                                    <h3>{project.name}</h3>
-                                    <p>{project.description}</p>
-                                </div>
-
-                            </div>
-                        </div>
-                    ))}
                 </div>
-            )}
+
+
+                <div className="bookshelf-container">
+                    <h2>Collaborations</h2>
+
+                    {collaboratorProjects.length === 0 ? <p>You are not a collaborator on any projects.</p> : (
+                        <div className="outer-bookshelf">
+                        <div className="bookshelf">
+                            {collaboratorProjects
+                            .filter(project => !project.deleted)
+                            .map(project => (
+                                <div className="book" key={project.id} onClick={() => navigate(`/projects/${project.id}`)}>
+                                    <div className="book-inner">
+
+                                        <div className="book-spine"
+                                            style={{ background: createBookGradient(project.color) }}>
+                                            <span>{project.name}</span>
+                                        </div>
+
+                                        <div className="book-cover">
+                                            <h3>{project.name}</h3>
+                                            <p>{project.description}</p>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                        </div>
+                    )}
+                </div>
+            </div>
 
             {/* --- MODAL POPUP (NO INTERCEPTORS USED) --- */}
             <CreateProjectModal 

@@ -1,14 +1,16 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 // import { useHistory } from 'react-router-dom';
 import { loginUser, registerUser } from "../../api/auth";
 // import Navbar from "../components/Navbar";
-
+import "../../assets/CSS/Auth.css";
 
 function Register() {
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [firstName, setFirstName] = useState("");
+    const [lastName, setLastName] = useState("");
     const [message, setMessage] = useState("");
 
     const navigate = useNavigate();
@@ -22,6 +24,8 @@ function Register() {
             const res = await registerUser({
                 email,
                 username,
+                firstName,
+                lastName,
                 password
             });
 
@@ -43,30 +47,94 @@ function Register() {
     };
 
     return (
-        <div className="Register">
+        <div className="auth-container">
+        <div className="auth-card">
+            
+            <header className="auth-header">
+            <h1>Create Account</h1>
+            <p>Join StorySmith to start building your lore</p>
+            </header>
 
-            <h1>Register</h1>
+            <form onSubmit={handleSubmit} className="auth-form">
+            <div className="form-group">
+                <label className="auth-label">Email</label>
+                <input
+                type="email"
+                placeholder="you@example.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="auth-input"
+                required
+                />
+            </div>
 
-            <form onSubmit={handleSubmit}>
+            <div className="form-group">
+                <label className="auth-label">Username</label>
                 <input
-                    placeholder="Email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                /> <br></br>
-                <input
-                    placeholder="Username"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
+                type="text"
+                placeholder="username"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                className="auth-input"
+                required
                 />
+            </div>
+
+            <div className="form-grid-two">
+                <div className="form-group">
+                <label className="auth-label">First Name</label>
                 <input
-                    placeholder="Password"
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
+                    type="text"
+                    placeholder="First"
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
+                    className="auth-input"
+                    required
                 />
-                <button type="submit">Register</button>
+                </div>
+
+                <div className="form-group">
+                <label className="auth-label">Last Name</label>
+                <input
+                    type="text"
+                    placeholder="Last"
+                    value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
+                    className="auth-input"
+                    required
+                />
+                </div>
+            </div>
+
+            <div className="form-group">
+                <label className="auth-label">Password</label>
+                <input
+                type="password"
+                placeholder="••••••••"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="auth-input"
+                required
+                />
+            </div>
+
+            <button type="submit" className="btn-auth-submit">
+                Register
+            </button>
             </form>
-            {message && <p>{message}</p>}
+
+            {message && <div className="auth-message">{message}</div>}
+
+            <footer className="auth-footer">
+            <p>
+                Already have an account?{' '}
+                <Link to="/login" className="auth-link">
+                Sign in
+                </Link>
+            </p>
+            </footer>
+
+        </div>
         </div>
     )
 }

@@ -11,6 +11,8 @@ public class WikiEntryDTO {
     private int position;
     private String subCategoryName;
     private String categoryName;
+    private String imageUrl;
+    private String summary;
 
     // public WikiEntryDTO(Long id, String title, String content, String categoryName, String subcategoryName) {
     //     this.id = id;
@@ -27,13 +29,15 @@ public class WikiEntryDTO {
         this.position = position;
     }
 
-    public WikiEntryDTO(Long id, String title, String content, int position, String subCategoryName, String categoryName) {
+    public WikiEntryDTO(Long id, String title, String content, int position, String subCategoryName, String categoryName, String imageUrl, String summary) {
         this.id = id;
         this.title = title;
         this.content = content;
         this.position = position;
         this.subCategoryName = subCategoryName;
         this.categoryName = categoryName;
+        this.imageUrl = imageUrl;
+        this.summary = summary;
     }
 
     public Long getId() {
@@ -74,4 +78,21 @@ public class WikiEntryDTO {
     public void setCategoryName(String categoryName) {
         this.categoryName = categoryName;
     }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+
+    }
+    public String getSummary() {
+        return summary;
+    }
+
+    public void setSummary(String summary) {
+        this.summary = summary;
+    }
 }
+

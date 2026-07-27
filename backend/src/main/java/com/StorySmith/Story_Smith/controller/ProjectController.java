@@ -13,7 +13,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import com.StorySmith.Story_Smith.dto.CreateProjectDTO;
 import com.StorySmith.Story_Smith.model.Projects;
-
+import org.springframework.web.bind.annotation.PutMapping;
+import java.util.Map;
 import java.util.List;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -83,6 +84,15 @@ public class ProjectController {
     @GetMapping("/{id}/projectMembers")
     public ResponseEntity<?> getProjectMembers(@PathVariable Long id) {
         return ResponseEntity.ok(projectSettingsService.GetProjectSettings(id));
+    }
+
+    @PutMapping("/{projectId}/cover-image")
+    public ResponseEntity<?> updateCoverImage(
+            @PathVariable Long projectId,
+            @RequestBody Map<String, String> request
+    ) {
+        String coverImage = request.get("coverImage");
+        return projectService.UpdateCoverImage(projectId, coverImage);
     }
     
     

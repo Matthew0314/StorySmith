@@ -15,6 +15,8 @@ interface RegisterRequest {
     username: string;
     email: string;
     password: string;
+    firstName: string;
+    lastName: string;
 }
 
 interface LoginRequest {

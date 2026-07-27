@@ -1,11 +1,15 @@
 import { useParams } from "react-router-dom";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import WikiBlockRenderer from "../components/WikiBlockRenderer";
 import type { EntryData, QuoteBlock, StatBlock, TextBlock } from "../types/WikiBlocks";
 import "../assets/CSS/wiki/wikiEntryEdit.css";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import type { DropResult } from "@hello-pangea/dnd";
 import { Link } from "react-router-dom"
+import type { WikiCategory, WikiSubcategory } from "../components/wiki/CategoryManagerModal";
+import type { WikiEntryDTO } from "../components/WikiCards";
+import axios from "axios";
+import ProjectNavBar from "../components/ProjectNavBar";
 // import { title } from "process";
 
 type SaveStatus = "saved" | "saving" | "unsaved" | "error";
@@ -17,30 +21,86 @@ export default function WikiEdit() {
     // Track initial load so autosave doesn't fire when fetching data
     const isInitialRender = useRef(true);
 
+        const token = localStorage.getItem("token");
+    const [categories, setCategories] = useState<WikiCategory[]>([]);
+    const [subcategories, setSubcategories] = useState<WikiSubcategory[]>([]);
+    const [entries, setEntries] = useState<WikiEntryDTO[]>([]);
+    const [isCreateOpen, setIsCreateOpen] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(null);
+    const [selectedSubcategory, setSelectedSubcategory] = useState<number | string>("");
+    const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
+    const [imagePreview, setImagePreview] = useState<string | null>(null);
 
-    useEffect(() => {
-        const fetchData = async () => {
-            console.log("Fetching data for entryId:", entryId, "in projectId:", projectId);
+useEffect(() => {
+    const loadAllData = async () => {
+        if (!projectId || !entryId || !token) return;
 
-            try {
-                const response = await fetch(`http://localhost:8080/api/wiki-entries/${entryId}`, {
+        try {
+            // 1. Fetch categories, subcategories, and entry data concurrently
+            const [catRes, subRes, entryRes] = await Promise.all([
+                axios.get(`http://localhost:8080/api/projects/${projectId}/wiki/category`, {
+                    headers: { Authorization: `Bearer ${token}` }
+                }),
+                axios.get(`http://localhost:8080/api/projects/${projectId}/wiki/subcategory`, {
+                    headers: { Authorization: `Bearer ${token}` }
+                }),
+                fetch(`http://localhost:8080/api/${projectId}/wiki-entries/${entryId}`, {
                     method: "GET",
                     headers: {
                         "Content-Type": "application/json",
-                        "Authorization": `Bearer ${localStorage.getItem("token")}`
+                        "Authorization": `Bearer ${token}`
                     }
-                });
+                })
+            ]);
 
-                const data = await response.json();
-                setEntryData(data);
-                console.log("Fetched entry data:", data);
-            } catch (error) {
-                console.error("Error fetching entry data:", error);
+            const loadedCategories: WikiCategory[] = catRes.data || [];
+            const loadedSubcategories: WikiSubcategory[] = subRes.data?.body || subRes.data || [];
+            const entryDataJson = await entryRes.json();
+
+            let resolvedCatId = entryDataJson.categoryId ? Number(entryDataJson.categoryId) : 0;
+
+            if (!resolvedCatId && entryDataJson.categoryName) {
+                const matchedCat = loadedCategories.find(
+                    (c) => c.name.toLowerCase() === entryDataJson.categoryName.toLowerCase()
+                );
+                if (matchedCat) {
+                    resolvedCatId = Number(matchedCat.id);
+                }
             }
-        };
-        console.log("useEffect triggered for entryId:", entryId, "in projectId:", projectId);
-        fetchData();
-    }, [projectId, entryId]);
+
+            // 3. Safely resolve Subcategory ID (checking for ID first, then fallback to matching by Name)
+            let resolvedSubId = entryDataJson.subcategoryId ? Number(entryDataJson.subcategoryId) : 0;
+
+            if (!resolvedSubId && entryDataJson.subCategoryName) {
+                const matchedSub = loadedSubcategories.find(
+                    (s) => s.name.toLowerCase() === entryDataJson.subCategoryName.toLowerCase()
+                );
+                if (matchedSub) {
+                    resolvedSubId = Number(matchedSub.id ?? (matchedSub as any).subcategoryId);
+                }
+            }
+
+            // 4. Update state in a clean, unified batch
+            setCategories(loadedCategories);
+            setSubcategories(loadedSubcategories);
+            setEntryData({
+                ...entryDataJson,
+                categoryId: resolvedCatId,
+                subcategoryId: resolvedSubId
+            });
+            setCoverImage(entryDataJson.imageUrl || null);
+            getImageUrl();
+
+            setSelectedCategory(resolvedCatId);
+            setSelectedSubcategory(resolvedSubId);
+        } catch (error) {
+            console.error("Error loading wiki edit page data:", error);
+        }
+    };
+
+    loadAllData();
+}, [projectId, entryId, token]);
 
     // 2. Debounced Autosave (Triggers 1.5s after user stops editing)
     useEffect(() => {
@@ -60,13 +120,14 @@ export default function WikiEdit() {
             console.log("Auto-saving entry data:", entryData);
             // return;
             try {
-                const response = await fetch(`http://localhost:8080/api/wiki-entries/${entryId}`, {
+                const response = await fetch(`http://localhost:8080/api/${projectId}/wiki-entries/${entryId}`, {
                     method: "PUT",
                     headers: {
                         "Content-Type": "application/json",
                         "Authorization": `Bearer ${localStorage.getItem("token")}`
                     },
                     body: JSON.stringify(entryData)
+        
                 });
 
                 if (!response.ok) throw new Error("Failed to auto-save");
@@ -76,7 +137,7 @@ export default function WikiEdit() {
                 console.error("Error auto-saving:", error);
                 setSaveStatus("error");
             }
-        }, 1500);
+        }, 150);
 
         return () => clearTimeout(timer);
     }, [entryData, entryId]);
@@ -172,13 +233,176 @@ export default function WikiEdit() {
         }));
     };
 
+
+
+    const safeSubcategories = Array.isArray(subcategories) ? subcategories : [];
+    // const fetchCategoryData = async () => {
+    //     if (!token || !projectId) return;
+
+    //     try {
+    //         const res = await axios.get(`http://localhost:8080/api/projects/${projectId}/wiki/category`, {
+    //             headers: { Authorization: `Bearer ${token}` }
+    //         });
+
+    //         const subRes = await axios.get(
+    //             `http://localhost:8080/api/projects/${projectId}/wiki/subcategory`,
+    //             { headers: { Authorization: `Bearer ${token}` } }
+    //         );
+
+    //         const subcategoriesData = subRes.data?.body || subRes.data;
+
+    //         setCategories(res.data);
+    //         setSubcategories(subcategoriesData);
+
+    //         // REMOVED the block that forced selectedCategory to res.data[0]!
+    //     } catch (err) {
+    //         console.error("Error fetching wiki categories:", err);
+    //     } 
+    // };
+
+    // useEffect(() => {
+    //     if (projectId) {
+    //         fetchCategoryData();
+
+    //     } else {
+    //         console.error("Project ID is missing in the URL");
+    //     }
+    // }, [projectId]);
+
+
+const filteredSubcategories = useMemo(() => {
+    if (!selectedCategory || !subcategories || subcategories.length === 0) {
+        return [];
+    }
+
+    return subcategories.filter((sub: any) => {
+        // Safely pull the category ID regardless of backend structure
+        const parentId = sub.categoryId ?? sub.category?.id ?? sub.parentCategoryId;
+        
+        // Convert BOTH to Number to prevent "5" === 5 type mismatch failures
+        return Number(parentId) === Number(selectedCategory);
+    });
+}, [selectedCategory, subcategories]);
+
+      const [isUploading, setIsUploading] = useState(false);
+      const [coverImage, setCoverImage] = useState<string | null>(null);
+
+    const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        const localPreviewUrl = URL.createObjectURL(file);
+        setImagePreview(localPreviewUrl);
+        setIsUploading(true);
+
+        const formData = new FormData();
+        formData.append("image", file);
+
+        try {
+            const res = await fetch("http://localhost:8080/api/upload", {
+                method: "POST",
+                body: formData,
+            });
+
+            if (!res.ok) {
+                throw new Error(`Upload failed with status: ${res.status}`);
+            }
+
+            const data = await res.json();
+
+            if (data.imageUrl) {
+                updateEntryState((prev) => ({
+                    ...prev,
+                    imageUrl: data.imageUrl
+                }));
+
+                setCoverImage(data.imageUrl);
+            } else {
+                console.warn("Upload response missing 'imageUrl' key:", data);
+            }
+
+            
+        } finally {
+            setIsUploading(false);
+        }
+    }
+
+    const getImageUrl = () => {
+        if (imagePreview) return imagePreview;
+        if (!coverImage) return null;
+        if (coverImage.startsWith("http://") || coverImage.startsWith("https://")) {
+        return coverImage;
+        }
+        const cleanPath = coverImage.startsWith("/") ? coverImage : `/${coverImage}`;
+
+        console.log("Resolved cover image URL:", `http://localhost:8080${cleanPath}`);
+        return `http://localhost:8080${cleanPath}`;
+    };
+
+     // 1. Handle Category Change
+// 1. Handle Category Change
+const handleCategoryChange = (categoryId: number) => {
+    setSelectedCategory(categoryId);
+    setSelectedSubcategory(0);
+
+    // Look up the name from your categories array
+    const matchedCategory = categories.find((cat) => Number(cat.id) === categoryId);
+    const categoryName = matchedCategory ? matchedCategory.name : "";
+
+    // Update entryData state with both ID and Name for the DTO
+    updateEntryState((prev) => ({
+        ...prev,
+        categoryId: categoryId,
+        categoryName: categoryName,
+        subcategoryId: null,
+        subCategoryName: null // Reset subcategory name as well
+    }));
+};
+
+
+// Updated Subcategory Handler
+const handleSubcategoryChange = (subcategoryId: number) => {
+    // 1. Sync dropdown state
+    setSelectedSubcategory(subcategoryId);
+
+    // 2. Handle "None" / default zero option
+    if (subcategoryId === 0) {
+        updateEntryState((prev) => ({
+            ...prev,
+            subcategoryId: null,
+            subCategoryName: null
+        }));
+        return;
+    }
+
+    // 3. Robust lookup (handles both 'id' and 'subcategoryId' backend schema variations)
+    const matchedSubcategory = subcategories.find(
+        (sub: any) => Number(sub.id ?? sub.subcategoryId) === Number(subcategoryId)
+    );
+
+    const subcategoryName = matchedSubcategory ? matchedSubcategory.name : null;
+
+    // 4. Update entry state cleanly
+    updateEntryState((prev) => ({
+        ...prev,
+        subcategoryId: subcategoryId,
+        subCategoryName: subcategoryName
+    }));
+};
+
+    const currentImageUrl = getImageUrl();
     return (
+        <div className="wiki-edit-page">
+        <div className="wiki-edit-topbar">
+            <div>{saveStatus}</div>
+            <Link to={`/projects/${projectId}/wiki`}>Back</Link>
+        </div>
         <div className="wiki-edit-wrapper">
             {/* Status bar... */}
-            <div>{saveStatus}</div>
+            
 
 
-            <Link to={`/projects/${projectId}/wiki`}>Back</Link>
+            
 
             <div className="wiki-edit-container">
                 <div className="component-column">
@@ -189,10 +413,52 @@ export default function WikiEdit() {
                     />
 
                     <div className="category-container">
-                        
+                        <div className="form-row">
+                            
+                            {/* Category Select */}
+                            <div className="form-group">
+                                <label className="form-label">Category</label>
+                                <select
+                                    className="form-select"
+                                    value={selectedCategory ?? ""}
+                                    onChange={(e) => handleCategoryChange(Number(e.target.value))}
+                                >
+                                    {categories.length > 0 ? (
+                                        categories.map((cat) => (
+                                            <option key={cat.id} value={cat.id}>
+                                                {cat.name}
+                                            </option>
+                                        ))
+                                    ) : (
+                                        <option value={0}>Default Category</option>
+                                    )}
+                                </select>
+                            </div>
 
+                            {/* Subcategory Select */}
+                            <div className="form-group">
+                                <label className="form-label">Subcategory</label>
+                                <select
+                                    className="form-select"
+                                    value={selectedSubcategory}
+                                    onChange={(e) => handleSubcategoryChange(Number(e.target.value))}
+                                >
+                                    {/* Always present default option */}
+                                    <option value={0}>None</option>
 
+                                    {/* Map subcategories under the current selected category */}
+                                    {filteredSubcategories.map((sub: any) => (
+                                        <option key={sub.id ?? sub.subcategoryId} value={sub.id ?? sub.subcategoryId}>
+                                            {sub.name}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+
+                        </div>
                     </div>
+
+                    
 
                     {/* Drag and Drop Zone */}
                     <DragDropContext onDragEnd={handleDragEnd}>
@@ -244,28 +510,81 @@ export default function WikiEdit() {
 
                 {/* Preview Column... */}
                 <div className="preview-column">
+
+
+
+
+                    <div className="WE-picture-section">
+                        <div className="WE-form-group">
+                            <div className="WE-image-upload-wrapper">
+                            <label htmlFor="cover-image-input" className="WE-image-preview-frame">
+                                {currentImageUrl ? (
+                                <div style={{ position: "relative", width: "100%", height: "100%" }}>
+                                    <img
+                                    src={currentImageUrl}
+                                    alt="Cover Preview"
+                                    className="WE-image-preview-img"
+                                    />
+                                    {isUploading && (
+                                    <div className="uploading-overlay">
+                                        <span>Uploading...</span>
+                                    </div>
+                                    )}
+                                </div>
+                                ) : (
+                                <div className="WE-image-upload-placeholder">
+                                    <svg
+                                    className="WE-upload-icon"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                    >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth="1.5"
+                                        d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                                    />
+                                    </svg>
+                                    <span>{isUploading ? "Uploading..." : "Upload Cover Image"}</span>
+                                </div>
+                                )}
+                            </label>
+
+                            <input
+                                type="file"
+                                id="cover-image-input"
+                                accept="image/*"
+                                onChange={handleImageChange}
+                                style={{ display: "none" }}
+                            />
+                            </div>
+                        </div>
+                        </div>
                     <h2 className="preview-title">Table of Contents</h2>
-                    {/* <div className="preview-content">
-                        {entryData?.blocks.map(data.title) ? (
-
-                        )};
-
-                    </div> */}
+                    <div className="preview-content">
+                        {entryData?.blocks.map((block) => (
+                            <div key={block.id}>
+                                {block.data.title && `- ${block.data.title}`}
+                            </div>
+                        ))}
+                    </div>
                 </div>
 
             {/* Block Creation Toolbar */}
             <div className="add-block-toolbar">
                {/* <span className="toolbar-label">+ Add Component:</span> */}
                 <button type="button" onClick={addTextBlock} className="add-block-btn">
-               📄 Text
+               Text
                </button>
                <button type="button" onClick={addQuoteBlock} className="add-block-btn">
-                   💬 Quote
+                   Quote
                </button>
                <button type="button" onClick={addStatBlock} className="add-block-btn">
-                   � Stat
+                   Stats
                </button>
              </div>
+        </div>
         </div>
         </div>
     );

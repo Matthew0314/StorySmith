@@ -12,7 +12,7 @@ import java.util.UUID;
 @JsonSubTypes({
     @JsonSubTypes.Type(value = TextBlock.class, name = "text"),
     @JsonSubTypes.Type(value = QuoteBlock.class, name = "quote"),
-    @JsonSubTypes.Type(value = StatBlockDTO.class, name = "stat")
+    @JsonSubTypes.Type(value = StatBlockDTO.class, name = "stats")
 })
 public abstract class WikiBlock {
     private String id;

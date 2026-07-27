@@ -37,6 +37,9 @@ public class Projects {
     @Column(nullable = false)
     private Boolean deleted;
 
+    @Column(name = "coverImage")
+    private String coverImage;
+
 
     public Projects() {
     }
@@ -105,4 +108,13 @@ public class Projects {
     public void setDeleted(Boolean deleted) {
         this.deleted = deleted;
     }
+
+    public String getCoverImage() {
+        return coverImage;
+    }
+
+    public void setCoverImage(String coverImage) {
+        this.coverImage = coverImage;
+    }
+    
 }

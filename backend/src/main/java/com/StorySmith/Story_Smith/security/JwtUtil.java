@@ -21,6 +21,10 @@ public class JwtUtil {
                 .claim("username", user.getUsername()) // 2. Add a custom claim containing the actual username!
                 .claim("role", user.getRole())
                 .claim("userId", user.getId())
+                .claim("FirstName", user.getFirstName())
+                .claim("LastName", user.getLastName())
+                .claim("email", user.getEmail()) // 3. Add a custom claim for email as well
+                .claim("profileUrl", user.getProfileUrl()) // 4. Add a custom claim for profile URL
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + 86400000)) // 1 day
                 .signWith(key, SignatureAlgorithm.HS256)

@@ -1,11 +1,90 @@
 :root {
-    --text: #ffffff;
+    /* --text: #ffffff;
     /* --background: #1e1612; */
-    --background: #0c0a08;
-    --titleText: #e08855;
+    /* --background: #0c0a08; */
+    /* --titleText: #e08855; */
+    /* --componentFont: Georgia, serif; */
+    /* --componentLeftPadding: 26px; */
+    /* --componentRightPadding: 16px; */
+    /* --componentFont: times, "Times New Roman", serif; */
+
+    /* background: var(--background); */
+    /* --wikiEdit-background: #0c0a08; */
+    --wikiEdit-background: #3B2A1F;
+    /* --wikiEdit-titleText: #ebeca4; */
+    --wikiEdit-titleText: #E67E22;;
+    --wikiEdit-text: #F5F1E8;
+    --wikiEdit-statsColor: #D6CFC4;
+    --wikiEdit-toolbarBackground: #2C1E16;
+
+
+    /* --wikiEdit-background: #4A3426;
+    --wikiEdit-titleText: #D97706;
+    --wikiEdit-text: #f1e5cd;
+    --wikiEdit-statsColor: #D7C7A5;
+    --wikiEdit-toolbarBackground: #302118; */
+
 }
 
+body {
+    /* background: var(--background); */
+    /* color: var(--text); */
+    /* font-family: var(--body); */
+}
 
+.wiki-edit-page {
+    background-color: var(--wikiEdit-background);
+    min-height: 100vh;
+}
+
+.wiki-edit-topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    background-color: var(--wikiEdit-toolbarBackground);
+    color: var(--wikiEdit-titleText);
+    /* font-family: Georgia, Cambria, "Times New Roman", Times, serif; */
+    margin: 0;
+    height: 7vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+}
+
+.form-label {
+    font-size: 11px;
+    /* color: var(--titleText); */
+    color: var(--wikiEdit-titleText);
+    text-align: left;
+    font-family: Georgia, Cambria, "Times New Roman", Times, serif;
+    /* margin-bottom: 0.375rem; */
+}
+/* .form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+} */
+
+.form-select {
+    background-color: #1e1612;
+    color: var(--wikiEdit-text);
+    border: 1px solid #2a2421;
+    border-radius: 0.375rem;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+    font-family: Georgia, Cambria, "Times New Roman", Times, serif;
+    width: 100%;
+}
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  width: 50%;
+  margin-left: 2rem;
+}
 
 .wiki-edit-container {
   /* background-color: #ffffff; */
@@ -18,14 +97,21 @@
 }
 
 .wiki-edit-title {
+    /* width: 95%; */
     width: 100%;
-  font-size: 2rem;
+    margin-left: 2rem;
+  font-size: 2.5rem;
   text-align: left;
   font-weight: bold;
   /* color: var(--text); */
-  color: var(--titleText);
+  color: var(--wikiEdit-titleText);
   margin-bottom: 1rem;
   border: none;
+  /* margin-left: 3.5rem; */
+  /* padding-left: 2rem; */
+  /* padding-right: 2rem; */
+  /* border-bottom: 2px solid #443328; */
+  /* margin-right: 100px; */
   /* margin-left: 2rem; */
 
 
@@ -37,7 +123,11 @@
 
 .wiki-edit-wrapper {
     padding-bottom: 5rem;
-    background-color: var(--background);
+    padding-top: 4rem;
+    min-height: 100vh;
+    margin: 0;
+    background-color: var(--wikiEdit-background) !important;
+    color: var(--textWiki);
 }
 
 .blocks-droppable-zone {
@@ -103,7 +193,7 @@
     align-items: center;
 
     height: 60px;
-    background-color: var(--background);
+    background-color: var(--wikiEdit-toolbarBackground);
     z-index: 1000;
 }
 
@@ -112,12 +202,168 @@
     border: none;
     font-size: 1.2rem;
     cursor: pointer;
-    color: #4f46e5;
+    color: var(--textWiki);
     transition: color 0.2s ease;
     padding: 0.5rem 1rem;
 }
 
 .add-block-toolbar .add-block-btn:hover {
-    color: #4338ca;
-    background-color: #e0e7ff;
+    color: var(--titleText);
+    background-color: #383838;
+}
+
+
+.preview-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    color: var(--wikiEdit-titleText);
+    text-align: left;
+}
+
+.preview-content {
+    text-align: left;
+    color: var(--textWiki);
+}
+
+.stat-block-title-input,
+.text-block-title-input {
+
+    font-size: 1.5rem;
+    letter-spacing: 4px;
+    border-bottom: 1px solid #443328;
+    padding-bottom: 8px;
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+.stat-block-title-input {
+    font-size: 1.75rem !important;
+    letter-spacing: 4px;
+    border-bottom: 1px solid #443328;
+    padding-bottom: 8px;
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+
+.text-block-title-input::placeholder {
+    color: #94a3b8;
+    font-weight: 500;
+}
+
+.image-upload-wrapper {
+  display: flex;
+  align-items: center;
+  margin-top: 0.25rem;
+  width: 100%;
+  /* justify-content: center; */
+}
+
+.image-preview-frame {
+width: 14rem;          /* Changed from 5rem */
+  height: 16.5rem;
+  background-color: #f4ebd0;
+  border-radius: 0.125rem;
+  padding: 0.25rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+  flex-shrink: 0;
+
+  /* CRITICAL: Force padding to be included in the width/height */
+  box-sizing: border-box; 
+  position: relative; /* Anchor for absolute children */
+  display: flex;
+  cursor: pointer;
+  transition: opacity 0.2s
+}
+
+.image-preview-img {
+  /* Position absolute forces full stretch inside the padded container */
+  position: absolute;
+  top: 0.25rem;    /* Matches padding */
+  left: 0.25rem;   /* Matches padding */
+  width: calc(100% - 0.5rem);  /* Subtracts total horizontal padding */
+  height: calc(100% - 0.5rem); /* Subtracts total vertical padding */
+  
+  object-fit: cover !important; /* Forces crop to fill frame without stretching distortion */
+  border-radius: 0.125rem;
+  display: block;
+}
+
+.image-upload-placeholder {
+  width: 100%;
+  height: 100%;
+  background-color: #44403c;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #a8a29e;
+  font-size: 9px;
+  font-family: system-ui, -apple-system, sans-serif;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-radius: 0.125rem;
+}
+
+.WE-picture-section {
+  flex: 1.5;
+  width: 100%;
+  align-self: stretch; /* Forces it to fill horizontal space if parent uses align-items */
+  display: flex;
+  flex-direction: column;
+  height: 60dvh;
+  padding-right: 2rem;
+}
+
+/* 1. Force form-group and image-upload-wrapper to stretch vertically */
+.WE-picture-section .WE-form-group,
+.WE-picture-section .WE-image-upload-wrapper {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch !important; /* Overrides align-items: center causing the purple gap */
+  justify-content: flex-start;
+  margin: 0 !important; /* Removes that 4.5px margin top pushing it down */
+}
+
+/* 2. Force the frame to grow into all available space */
+.WE-image-preview-frame {
+  width: 100% !important;
+  height: 100%;
+  flex: 1;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+}
+
+/* 3. Center ONLY the inner contents (icon + text), not the box layout */
+.WE-image-upload-placeholder {
+  width: 100%;
+  height: 100%;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* This is where align-items: center belongs! */
+  justify-content: center;
+}
+
+.WE-image-preview-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Fills container while preserving aspect ratio */
+  object-position: center; /* Centers the image content */
+}
+
+
+.loading-state,
+.error-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  color: var(--color-text-muted);
 }

@@ -104,6 +104,7 @@ public class WikiEntryResponseDTO {
     private String title;
     private String categoryName;
     private String subCategoryName;
+    private String imageUrl; // New field for the image URL
     private List<BlockResponseDTO> blocks;
 
     public WikiEntryResponseDTO(WikiEntry entry) {
@@ -120,6 +121,7 @@ public class WikiEntryResponseDTO {
         this.blocks = entry.getComponents().stream()
             .map(BlockResponseDTO::new)
             .collect(Collectors.toList());
+        this.imageUrl = entry.getImageUrl(); // Map the image URL from the entity
     }
 
     // Getters and Setters
@@ -138,11 +140,14 @@ public class WikiEntryResponseDTO {
     public List<BlockResponseDTO> getBlocks() { return blocks; }
     public void setBlocks(List<BlockResponseDTO> blocks) { this.blocks = blocks; }
 
+    public String getImageUrl() { return imageUrl; }
+    public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
     // Inner DTO for individual blocks
     public static class BlockResponseDTO {
         private Long id;
         private String type; // e.g., "text", "quote"
         private int position;
+        // private String title;
 
         // Change from String + @JsonRawValue -> Object
         // Jackson now accepts JSON Objects during PUT/POST requests
@@ -181,5 +186,10 @@ public class WikiEntryResponseDTO {
 
         public int getPosition() { return position; }
         public void setPosition(int position) { this.position = position; }
+
+
+
+        // public String getTitle() { return title; }
+        // public void setTitle(String title) { this.title = title; }
     }
 }

@@ -5,6 +5,13 @@ import org.springframework.core.annotation.Order;
 import com.StorySmith.Story_Smith.model.Projects;
 import com.StorySmith.Story_Smith.model.WikiModels.WikiCategory;
 
+import jakarta.persistence.*;
+
+import com.StorySmith.Story_Smith.model.WikiModels.WikiSubcategory;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.StorySmith.Story_Smith.model.WikiModels.components.ComponentType;
 
 import jakarta.annotation.Generated;
 import jakarta.persistence.*;
@@ -32,6 +39,9 @@ public class WikiEntry {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "subcategory_id")
     private WikiSubcategory subcategory;
+
+    @Column(name = "image_url")
+    private String imageUrl; // New field for storing the image URL
 
     // @Lob
     // @Column(name = "profile_picture", columnDefinition = "LONGBLOB")
@@ -134,6 +144,39 @@ public class WikiEntry {
 
     public java.util.List<WikiEntryComponent> getComponents() { return components; }
     public void setComponents(java.util.List<WikiEntryComponent> components) { this.components = components; }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+
+    public String getSummary() {
+        ObjectMapper mapper = new ObjectMapper();
+
+        for (WikiEntryComponent component : components) {
+            if (component.getComponentType() == ComponentType.TEXT) {
+                String contentJson = component.getContentJson();
+                
+                if (contentJson != null && !contentJson.isBlank()) {
+                    try {
+                        JsonNode root = mapper.readTree(contentJson);
+                        // Reads the "textContent" field as plain text
+                        if (root.has("textContent")) {
+                            return root.get("textContent").asText();
+                        }
+                    } catch (Exception e) {
+                        // Log parsing error or fall back to returning raw string safely
+                        System.err.println("Failed to parse content JSON: " + e.getMessage());
+                    }
+                }
+            }
+        }
+        return "";
+    }
 
 
 

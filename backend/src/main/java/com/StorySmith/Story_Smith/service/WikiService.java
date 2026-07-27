@@ -75,7 +75,10 @@ public class WikiService {
                 .stream()
                 .map(entry -> new WikiEntryDTO(entry.getId(), entry.getTitle(), entry.getContent(), entry.getPosition(),
                         entry.getSubcategory() != null ? entry.getSubcategory().getName() : null,
-                        entry.getCategory() != null ? entry.getCategory().getName() : null))
+                        entry.getCategory() != null ? entry.getCategory().getName() : null,
+                        entry.getImageUrl(),
+                        entry.getSummary() // Include the summary in the DTO
+                ))
                 .toList();
 
         if (!entries.isEmpty()) {
@@ -134,7 +137,7 @@ public class WikiService {
         }
 
         newEntry.setPosition(maxPosition + 1);
-        setDefaultWikiComponenets(newEntry);
+        // setDefaultWikiComponenets(newEntry);
         wikiEntryRepository.save(newEntry);
         return ResponseEntity.ok("Wiki entry created successfully");
     }

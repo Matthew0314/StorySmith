@@ -6,6 +6,5 @@ public enum ComponentType {
     IMAGE,
     TABLE,
     ATTRIBUTES,
-    STAT,
-    RELATIONSHIPS
+    STATS
 }

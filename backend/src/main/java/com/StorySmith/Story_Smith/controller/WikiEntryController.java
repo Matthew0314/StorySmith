@@ -5,7 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/wiki-entries")
+@RequestMapping("/api/{projectId}/wiki-entries")
 public class WikiEntryController {
 
     private final WikiEntryService wikiEntryService;
@@ -21,8 +21,8 @@ public class WikiEntryController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<WikiEntryResponseDTO> updateWikiEntryInfo(@PathVariable Long id, @RequestBody WikiEntryResponseDTO updatedEntry) {
+    public ResponseEntity<WikiEntryResponseDTO> updateWikiEntryInfo(@PathVariable Long id, @RequestBody WikiEntryResponseDTO updatedEntry, @PathVariable Long projectId) {
         // Implement the update logic here
-        return ResponseEntity.ok(wikiEntryService.updateWikiEntryInfo(id, updatedEntry).getBody());
+        return ResponseEntity.ok(wikiEntryService.updateWikiEntryInfo(projectId, id, updatedEntry).getBody());
     }
 }

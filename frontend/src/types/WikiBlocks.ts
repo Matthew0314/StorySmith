@@ -4,9 +4,10 @@ export interface QuoteBlock {
     id: number;
     type: "quote";
     position: number;
+    // title: string;
     data: {
         quoteText: string;
-        author?: string;
+        title: string;
     };
 }
 
@@ -14,6 +15,7 @@ export interface TextBlock {
     id: number;
     type: "text";
     position: number;
+    // title: string;
     data: {
         title: string;
         textContent?: string;
@@ -25,6 +27,7 @@ export interface StatBlock {
     id: number;
     type: "stats";
     position: number;
+    // title: string;
     data: {
         title: string;
         maxValue: number;
@@ -44,6 +47,7 @@ export interface EntryData {
     categoryName: string;
     subCategoryName?: string;
     blocks: WikiBlock[];
+    imageUrl?: string;
 }
 
 

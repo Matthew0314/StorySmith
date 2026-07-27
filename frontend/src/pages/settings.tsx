@@ -5,6 +5,7 @@ import axios from "axios";
 import DeleteProjectModal from "../components/settings/deleteProject.tsx";
 import { useNavigate } from "react-router-dom";
 import InviteUsers from "../components/settings/inviteUsers.tsx";
+import ProjectNavBar from "../components/ProjectNavBar.tsx";
 
 interface Role {
     id: number;
@@ -146,20 +147,22 @@ export default function ProjectSettings() {
 
 
     return (
+        <>
+        <ProjectNavBar />
         <div className="settings-container">
 
 
             <div className="settings-header">
                 <div>
                     <h1>Project Settings</h1>
-                    <p>
+                    {/* <p>
                         Manage members, roles, and project configuration
-                    </p>
+                    </p> */}
                 </div>
 
-                <span className="project-id">
+                {/* <span className="project-id">
                     Project #{settings.projectId}
-                </span>
+                </span> */}
             </div>
 
 
@@ -242,7 +245,7 @@ export default function ProjectSettings() {
 
 
             {/* ROLES */}
-            <section className="settings-section">
+            {/* <section className="settings-section">
 
                 <div className="section-title">
                     <h2>Roles</h2>
@@ -292,7 +295,7 @@ export default function ProjectSettings() {
                 </div>
 
 
-            </section>
+            </section> */}
 
 
 
@@ -344,25 +347,25 @@ export default function ProjectSettings() {
             {roles.some(role => role.name === "OWNER") && (
                 <section className="danger-section">
 
-                <h2>
-                    Danger Zone
-                </h2>
+                    <h2>
+                        Danger Zone
+                    </h2>
 
-                <p>
-                    Deleting this project will remove it from your dashboard.
-                    You can restore it later.
-                </p>
-
-
-                <button
-                    className="delete-btn"
-                    onClick={() => setDeleteOpen(true)}
-                >
-                    Delete Project
-                </button>
+                    <p>
+                        Deleting this project will remove it from your dashboard.
+                        You can restore it later.
+                    </p>
 
 
-            </section>
+                    <button
+                        className="delete-btn"
+                        onClick={() => setDeleteOpen(true)}
+                    >
+                        Delete Project
+                    </button>
+
+
+                </section>
             )}
 
             <DeleteProjectModal
@@ -378,5 +381,6 @@ export default function ProjectSettings() {
 
 
         </div>
+        </>
     );
 }

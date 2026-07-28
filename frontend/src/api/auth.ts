@@ -1,13 +1,11 @@
-import axios from "axios";
-
-const API = "http://localhost:8080/api/auth";
+import api from "./axiosConfig.ts"; // adjust path depending on where your axios file is
 
 export const registerUser = (userData: RegisterRequest) => {
-    return axios.post(`${API}/register`, userData);
+    return api.post("/auth/register", userData);
 };
 
 export const loginUser = async (data: LoginRequest): Promise<AuthResponse> => {
-    const res = await axios.post(`${API}/login`, data);
+    const res = await api.post("/auth/login", data);
     return res.data;
 };
 

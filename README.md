@@ -172,8 +172,6 @@ StorySmith
 └── frontend
     ├── components
     ├── pages
-    ├── services
-    ├── hooks
     └── assets
 ```
 

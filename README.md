@@ -137,21 +137,15 @@ npm run dev
 
 # 🔑 Environment Variables
 
-Create an `.env` file (or configure your application properties) with the following values:
+Use the `application-example.properties` to initialize these variables:
 
 ```properties
-DATABASE_URL=
-DATABASE_USERNAME=
-DATABASE_PASSWORD=
+spring.datasource.url=${DATABASE_URL}
+spring.datasource.username=${DATABASE_USERNAME}
+spring.datasource.password=${DATABASE_PASSWORD}
 
-JWT_SECRET=
+spring.ai.gemini.api-key=${GEMINI_API_KEY}
 
-GEMINI_API_KEY=
-
-AWS_ACCESS_KEY=
-AWS_SECRET_KEY=
-AWS_BUCKET_NAME=
-AWS_REGION=
 ```
 
 ---

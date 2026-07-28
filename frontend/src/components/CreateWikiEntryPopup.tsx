@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import "../assets/CSS/CreateWikiEntryPopup.css";
-import axios from "axios";
+// import axios from "axios";
+import api from "../api/axiosConfig";
 
 interface WikiEntryProps {
   isOpen: boolean;
@@ -91,8 +92,8 @@ export default function CreateWikiEntryPopup({
 
     try {
       const token = localStorage.getItem("token");
-      await axios.post(
-        `/api/projects/${projectId}/wiki/create/${activeCategory}`,
+      await api.post(
+        `projects/${projectId}/wiki/create/${activeCategory}`,
         {
           title,
           subcategoryId: selectedSubcategory,

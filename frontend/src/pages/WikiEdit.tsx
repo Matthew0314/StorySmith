@@ -342,14 +342,13 @@ const filteredSubcategories = useMemo(() => {
     const getImageUrl = () => {
         if (imagePreview) return imagePreview;
         if (!coverImage) return null;
-        if (coverImage.startsWith("http://") || coverImage.startsWith("https://")) {
-        return coverImage;
-        }
-        const cleanPath = coverImage.startsWith("/") ? coverImage : `/${coverImage}`;
 
-        console.log("Resolved cover image URL:", `http://localhost:8080${cleanPath}`);
-        return `http://localhost:8080${cleanPath}`;
-    };
+        if (coverImage.startsWith("http")) {
+            return coverImage;
+        }
+
+        return `${import.meta.env.VITE_API_URL}${coverImage}`;
+        };
 
      // 1. Handle Category Change
 // 1. Handle Category Change

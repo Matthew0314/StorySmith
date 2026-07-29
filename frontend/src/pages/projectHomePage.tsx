@@ -114,15 +114,15 @@ export default function ProjectHomePage() {
 
   // Helper to resolve cover image full URL
   const getImageUrl = () => {
-    if (imagePreview) return imagePreview;
-    if (!coverImage) return null;
-    if (coverImage.startsWith("http://") || coverImage.startsWith("https://")) {
-      return coverImage;
-    }
-    const cleanPath = coverImage.startsWith("/") ? coverImage : `/${coverImage}`;
+  if (imagePreview) return imagePreview;
+  if (!coverImage) return null;
 
-    return `http://localhost:8080${cleanPath}`;
-  };
+  if (coverImage.startsWith("http")) {
+    return coverImage;
+  }
+
+  return `${import.meta.env.VITE_API_URL}${coverImage}`;
+};
 
   if (loading) {
     return (

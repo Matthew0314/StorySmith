@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import java.util.Map;
 import java.util.List;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.security.core.Authentication;
+import com.StorySmith.Story_Smith.security.AuthenticatedUser;
 
 import com.StorySmith.Story_Smith.model.ProjectRole;
 
@@ -34,6 +36,8 @@ public class ProjectController {
 
     @GetMapping("/{id}/owner")
     public ResponseEntity<List<Projects>> getProjectsOwned(@PathVariable Long id) {
+
+
         List<Projects> projects = projectService.GetOwnedProjects(id);
         return ResponseEntity.ok(projects);
     }
@@ -60,7 +64,15 @@ public class ProjectController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Projects> getProjectById(@PathVariable Long id) {
+    public ResponseEntity<Projects> getProjectById(@PathVariable Long id, Authentication authentication) {
+
+        // Check if the authenticated user has access to the project
+        AuthenticatedUser userDetails = (AuthenticatedUser)authentication.getPrincipal();
+        if (!projectService.userHasAccessToProject(id, userDetails.getId())) {
+            return ResponseEntity.status(403).build(); // Forbidden
+        }
+        
+
         Projects project = projectService.GetProjectById(id);
         if (project != null) {
             return ResponseEntity.ok(project);

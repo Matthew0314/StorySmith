@@ -41,20 +41,25 @@ public class JwtFilter extends OncePerRequestFilter {
             return;
         }
 
+        Long userId = JwtUtil.extractId(token);
         String email = JwtUtil.extractEmail(token);
 
-        if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            
-            // FIX: Supply an explicit authority role so Spring Security recognizes permissions
-            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                    email,       
-                    null,        
-                    List.of(new SimpleGrantedAuthority("ROLE_USER")) // <-- Added default user authority
+        if (userId != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+
+            AuthenticatedUser principal =
+                    new AuthenticatedUser(userId, email);
+
+            UsernamePasswordAuthenticationToken authentication =
+                    new UsernamePasswordAuthenticationToken(
+                            principal,
+                            null,
+                            List.of(new SimpleGrantedAuthority("ROLE_USER"))
+                    );
+
+            authentication.setDetails(
+                    new WebAuthenticationDetailsSource().buildDetails(request)
             );
 
-            authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-
-            // Hand the user context directly to Spring Security's thread tracking scope
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
 

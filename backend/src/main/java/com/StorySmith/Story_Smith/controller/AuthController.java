@@ -42,12 +42,15 @@ public class AuthController {
     @Autowired
     private com.StorySmith.Story_Smith.service.WikiEntryService wikiEntryService;
 
+
+    // Registers a new user and returns a success message or error message
     @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody User user) {
-        // Implement registration logic here
 
+        // Call the register method in UserService to handle registration logic
         String result = userService.register(user);
 
+        // Return appropriate response based on the result
         if (result.equals("User registered successfully")) {
             return ResponseEntity.ok(result);
         } else {
@@ -55,32 +58,19 @@ public class AuthController {
         }
     }
 
-    // @PostMapping("/login")
-    // public ResponseEntity<String> login(@RequestBody LoginRequestDTO loginRequest) {
-
-    //     User user = userRepository.findByEmail(loginRequest.email);
-
-    //     if (user == null) {
-    //         return ResponseEntity.status(401).body("Invalid email or password");
-    //     }
-
-    //     if (!passwordEncoder.matches(loginRequest.password, user.getPassword())) {
-    //         return ResponseEntity.status(401).body("Invalid email or password");
-    //     }
-
-    //     String token = JwtUtil.generateToken(user);
-    //     // Implement login logic here
-    //     return ResponseEntity.ok(token);
-    // }
+    // Handles user login and returns a JWT token along with user details
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequestDTO loginRequest) {
 
+        // Authenticate the user using email and password
         User user = userRepository.findByEmail(loginRequest.getEmail()); // Ensure getter is used
 
+        // Check if user exists and password matches
         if (user == null || !passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
             return ResponseEntity.status(401).body(Map.of("message", "Invalid email or password"));
         }
 
+        // Generate JWT token for the authenticated user
         String token = JwtUtil.generateToken(user);
         
         // Create a structured map matching your frontend's AuthResponse interface
@@ -89,20 +79,20 @@ public class AuthController {
         response.put("id", user.getId());
         response.put("username", user.getUsername());
         response.put("email", user.getEmail());
-        response.put("role", user.getRole()); // Matches 'roles' string on frontend
-        response.put("profileUrl", user.getProfileUrl()); // New field for profile URL
-        // response.put("firstName", user.getFirstName());
-        // response.put("lastName", user.getLastName());
-
+        response.put("role", user.getRole()); 
+        response.put("profileUrl", user.getProfileUrl()); 
         return ResponseEntity.ok(response);
     }
 
+
+    // Endpoint to search for users based on a query string and project ID
     @GetMapping("/members/search")
     public List<UserSearchDTO> searchUsers(@RequestParam Long projectId, @RequestParam String query) {
-        System.out.println("Controller received search request with projectId: " + projectId + " and query: " + query);
+        // Call the searchUsers method in UserService to perform the search
         return userService.searchUsers(projectId, query);
     }
 
+    // Endpoint to update user information, including profile URL and name
     @PutMapping("/update-info")
     public ResponseEntity<?> updateUserInfo(@RequestBody User updatedUser) {
         User existingUser = userRepository.findById(updatedUser.getId()).orElse(null);
@@ -110,10 +100,6 @@ public class AuthController {
             return ResponseEntity.status(404).body(Map.of("message", "User not found"));
         }
 
-        // Update fields
-        // existingUser.setUsername(updatedUser.getUsername());
-        // existingUser.setEmail(updatedUser.getEmail());
-        // Add other fields as necessary
         existingUser.setFirstName(updatedUser.getFirstName());
         existingUser.setLastName(updatedUser.getLastName());
 

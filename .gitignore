@@ -1,3 +1,39 @@
 /uploads/
-backend/src/main/resources/application.properties
+
+
+# Java
+target/
+*.class
+
+# Maven
+.mvn/wrapper/maven-wrapper.jar
+
+# Node
+node_modules/
+dist/
+
+# Environment
 .env
+.env.*
+
+!.env.example
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# Logs
+*.log
+logs/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker
+docker-data/
+postgres-data/
+
+# Build
+coverage/

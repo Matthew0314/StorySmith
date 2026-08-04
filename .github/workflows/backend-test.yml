@@ -30,6 +30,14 @@ jobs:
           distribution: 'temurin'
 
 
-      - name: Run Backend Tests
+      - name: Build and Test Backend
         working-directory: backend
-        run: ./mvnw test
+        run: ./mvnw clean package
+
+      - name: Upload Build Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: storysmith-backend
+          path: backend/target/*.jar
+
+   

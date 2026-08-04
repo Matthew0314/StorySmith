@@ -1,6 +1,7 @@
 package com.StorySmith.Story_Smith.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.http.ResponseEntity;
 import com.StorySmith.Story_Smith.model.User;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,14 +21,14 @@ public class UserService {
     @Autowired
     private PasswordEncoder encoder;
 
-    public String register(User user) {
+    public ResponseEntity<String> register(User user) {
         
         if (userRepository.existsByUsername(user.getUsername())) {
-            return "Username already exists";
+            return ResponseEntity.badRequest().body("Username already exists");
         }
 
         if (userRepository.existsByEmail(user.getEmail())) {
-            return "Email already exists";
+            return ResponseEntity.badRequest().body("Email already exists");
         }
 
         user.setRole(UserRole.USER);
@@ -35,7 +36,7 @@ public class UserService {
         user.setPassword(encoder.encode(user.getPassword()));
 
         userRepository.save(user);
-        return "User registered successfully";
+        return ResponseEntity.ok("User registered successfully");
     }
 
     public List<UserSearchDTO> searchUsers(Long projectId, String query) {
@@ -44,4 +45,10 @@ public class UserService {
                 .map(UserSearchDTO::new)
                 .toList();
     }
+
+    public User createUser(User user) {
+        return userRepository.save(user);
+    }
+
+
 }

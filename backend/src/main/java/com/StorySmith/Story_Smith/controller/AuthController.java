@@ -48,14 +48,7 @@ public class AuthController {
     public ResponseEntity<String> register(@RequestBody User user) {
 
         // Call the register method in UserService to handle registration logic
-        String result = userService.register(user);
-
-        // Return appropriate response based on the result
-        if (result.equals("User registered successfully")) {
-            return ResponseEntity.ok(result);
-        } else {
-            return ResponseEntity.badRequest().body(result);
-        }
+        return userService.register(user);
     }
 
     // Handles user login and returns a JWT token along with user details

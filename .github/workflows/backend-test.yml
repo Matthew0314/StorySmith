@@ -40,4 +40,8 @@ jobs:
           name: storysmith-backend
           path: backend/target/*.jar
 
+      - name: Build Docker Image
+        working-directory: backend
+        run: docker build -t storysmith-backend .
+
    

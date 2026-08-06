@@ -41,6 +41,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/wiki-entries/**").permitAll()
                 .requestMatchers("/api/ai/**").permitAll()
                 .requestMatchers("/api/upload/**").permitAll()
+                .requestMatchers("/api/telemetry/**").permitAll()
                 .requestMatchers("/uploads/**").permitAll()
                 .anyRequest().authenticated()
             );

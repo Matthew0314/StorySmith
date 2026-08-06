@@ -11,6 +11,8 @@ services:
       - postgres_data:/var/lib/postgresql/data
 
   backend:
+    build:
+      context: ./backend
     image: storysmith-backend
     ports:
       - "8080:8080"
@@ -23,6 +25,8 @@ services:
       GEMINI_AI_KEY: ${GEMINI_AI_KEY}
 
   frontend:
+    build:
+      context: ./frontend
     image: storysmith-frontend
     ports:
       - "5173:5173"

@@ -1,39 +1,69 @@
 /uploads/
 
+# ======================
+# Environment / Secrets
+# ======================
 
-# Java
+.env
+.env.*
+!.env.example
+
+# AWS credentials
+.aws/
+*.pem
+*.key
+
+# ======================
+# Java / Spring Boot
+# ======================
+
 target/
 *.class
 
-# Maven
+# Maven generated files
 .mvn/wrapper/maven-wrapper.jar
 
-# Node
+# Logs
+*.log
+
+
+# ======================
+# React / Node
+# ======================
+
 node_modules/
 dist/
+build/
 
-# Environment
-.env
-.env.*
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 
-!.env.example
 
+# ======================
 # IDE
+# ======================
+
 .idea/
 .vscode/
 *.iml
 
-# Logs
-*.log
-logs/
 
+# ======================
 # OS
+# ======================
+
 .DS_Store
 Thumbs.db
 
-# Docker
-docker-data/
-postgres-data/
 
-# Build
-coverage/
+# ======================
+# Docker
+# ======================
+
+postgres-data/
+docker-data/
+
+# Database backups
+*.sql
+*.dump

@@ -22,6 +22,8 @@ import com.StorySmith.Story_Smith.model.ProjectRole;
 import com.StorySmith.Story_Smith.repository.ProjectRoleRepository;
 import java.util.Comparator;
 
+import com.StorySmith.Story_Smith.model.telemetry.TelemetryEventType;
+
 @Service
 public class ProjectService {
 
@@ -42,6 +44,9 @@ public class ProjectService {
 
     @Autowired
     private WikiEntryService wikiEntryService;
+
+    @Autowired
+    private TelemetryService telemetryService;
 
     public List<Projects> GetOwnedProjects(Long userId) {
         return projectRepository.findOwnedProjectsByUserId(userId);
@@ -77,6 +82,15 @@ public class ProjectService {
             );
 
             wikiService.setDefaultWikiCategories(project);
+
+            telemetryService.recordEvent(
+                TelemetryEventType.CREATE_PROJECT,
+                user.getId(),
+                Map.of(
+                    "projectId", project.getId(),
+                    "projectName", project.getName()
+                )
+            );
 
             // pc.addRole(ownerRole);
             // Return a clean JSON message matching your frontend standards

@@ -23,6 +23,7 @@ import com.StorySmith.Story_Smith.dto.WikiDTOs.CategoryDTO;
 import com.StorySmith.Story_Smith.dto.WikiDTOs.WikiEntryDTO;
 
 import com.StorySmith.Story_Smith.dto.WikiDTOs.SubcategoryDTO;
+import org.springframework.security.core.Authentication;
 
 
 @RestController
@@ -38,9 +39,9 @@ public class WikiController {
 
 
     @PostMapping("/create/{categoryId}")
-    public ResponseEntity<?> createWiki(@PathVariable Long projectId, @PathVariable Long categoryId, @RequestBody CreateWikiDTO createWikiDTO) {
+    public ResponseEntity<?> createWiki(@PathVariable Long projectId, @PathVariable Long categoryId, @RequestBody CreateWikiDTO createWikiDTO, Authentication authentication) {
         
-        return ResponseEntity.ok(wikiService.createWikiEntry(projectId, categoryId, createWikiDTO.getTitle(), createWikiDTO.getSubcategoryId()));
+        return ResponseEntity.ok(wikiService.createWikiEntry(projectId, categoryId, createWikiDTO.getTitle(), createWikiDTO.getSubcategoryId(), authentication));
     }
 
 
@@ -77,9 +78,8 @@ public class WikiController {
     }
 
     @DeleteMapping("/entries/{entryId}")
-    public ResponseEntity<?> deleteEntry(@PathVariable Long projectId, @PathVariable Long entryId) {
-        wikiService.deleteEntry(projectId, entryId);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<?> deleteEntry(@PathVariable Long projectId, @PathVariable Long entryId, Authentication authentication) {
+        return wikiService.deleteEntry(projectId, entryId, authentication);
     }
 
 

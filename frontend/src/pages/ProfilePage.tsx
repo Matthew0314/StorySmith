@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, type ChangeEvent } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import '../assets/CSS/ProfilePage.css';
 import { jwtDecode } from 'jwt-decode';
 import api from '../api/axiosConfig'; // Import the configured axios instance
@@ -197,6 +197,9 @@ export default function ProfilePage() {
           <button onClick={() => navigate(-1)} className="btn-back">
             ← Back
           </button>
+          <Link to="/admin-dashboard" className="admin-link">
+          Go to Admin Dashboard
+        </Link>
         </header>
 
         {/* Profile Avatar Card */}
@@ -295,7 +298,10 @@ export default function ProfilePage() {
           </button>
         </section>
 
+        
       </div>
     </div>
   );
 }
+
+   

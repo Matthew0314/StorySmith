@@ -1,0 +1,38 @@
+.metric-card {
+    background: white;
+
+    border-radius: 12px;
+
+    padding: 20px;
+
+    box-shadow: 0 2px 8px rgba(0,0,0,.1);
+}
+
+.metric-grid {
+    display: grid;
+
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+
+    gap: 20px;
+}
+
+
+.metric-card h3 {
+    margin: 0;
+}
+
+.metric-card p {
+    font-size: 2rem;
+
+    font-weight: bold;
+}
+
+.chart-container {
+
+    margin-top: 30px;
+
+    padding: 20px;
+
+    border-radius: 12px;
+
+}

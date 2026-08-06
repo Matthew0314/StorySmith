@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import com.StorySmith.Story_Smith.model.Projects;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import com.StorySmith.Story_Smith.model.User;
 
 
 @Repository
@@ -32,6 +33,10 @@ public interface ProjectRepository extends JpaRepository<Projects, Long> {
     List<Projects> findCollaboratedProjectsByUserId(@Param("userId") Long userId);
 
     Projects findById(long id);
+
+    // User findOwnerByProjectId(Long id);
+
+    // List<User> findCollaboratorsByProjectId(Long id);
 
     
 }

@@ -114,15 +114,15 @@ export default function ProjectHomePage() {
 
   // Helper to resolve cover image full URL
   const getImageUrl = () => {
-  if (imagePreview) return imagePreview;
-  if (!coverImage) return null;
+    if (imagePreview) return imagePreview;
+    if (!coverImage) return null;
 
-  if (coverImage.startsWith("http")) {
-    return coverImage;
-  }
+    if (coverImage.startsWith("http")) {
+      return coverImage;
+    }
 
-  return `${import.meta.env.VITE_API_URL}${coverImage}`;
-};
+    return `${import.meta.env.VITE_API_URL}${coverImage}`;
+  };
 
   if (loading) {
     return (

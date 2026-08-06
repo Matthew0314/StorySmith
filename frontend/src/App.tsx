@@ -1,5 +1,6 @@
 import './App.css'
 import AiChatPage from './pages/LoreChatPage.tsx'
+import TelemetryDashboard from './pages/TelemetryDashboard.tsx' 
 import ProfilePage from './pages/ProfilePage.tsx'
 import Home from './pages/home.tsx' 
 import { Routes, Route } from 'react-router-dom'
@@ -25,6 +26,15 @@ function App() {
           element={
             <ProtectedRoute>
               <Projects />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/admin-dashboard"
+          element={
+            <ProtectedRoute>
+              <TelemetryDashboard />
             </ProtectedRoute>
           }
         />

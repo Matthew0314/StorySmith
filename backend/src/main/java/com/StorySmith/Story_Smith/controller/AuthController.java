@@ -46,7 +46,6 @@ public class AuthController {
     // Registers a new user and returns a success message or error message
     @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody User user) {
-
         // Call the register method in UserService to handle registration logic
         return userService.register(user);
     }
@@ -54,28 +53,33 @@ public class AuthController {
     // Handles user login and returns a JWT token along with user details
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequestDTO loginRequest) {
-
-        // Authenticate the user using email and password
-        User user = userRepository.findByEmail(loginRequest.getEmail()); // Ensure getter is used
-
-        // Check if user exists and password matches
-        if (user == null || !passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
-            return ResponseEntity.status(401).body(Map.of("message", "Invalid email or password"));
-        }
-
-        // Generate JWT token for the authenticated user
-        String token = JwtUtil.generateToken(user);
-        
-        // Create a structured map matching your frontend's AuthResponse interface
-        Map<String, Object> response = new HashMap<>();
-        response.put("token", token);
-        response.put("id", user.getId());
-        response.put("username", user.getUsername());
-        response.put("email", user.getEmail());
-        response.put("role", user.getRole()); 
-        response.put("profileUrl", user.getProfileUrl()); 
-        return ResponseEntity.ok(response);
+        // Call the login method in UserService to handle authentication logic
+        return userService.login(loginRequest);
     }
+    // @PostMapping("/login")
+    // public ResponseEntity<?> login(@RequestBody LoginRequestDTO loginRequest) {
+
+    //     // Authenticate the user using email and password
+    //     User user = userRepository.findByEmail(loginRequest.getEmail()); // Ensure getter is used
+
+    //     // Check if user exists and password matches
+    //     if (user == null || !passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
+    //         return ResponseEntity.status(401).body(Map.of("message", "Invalid email or password"));
+    //     }
+
+    //     // Generate JWT token for the authenticated user
+    //     String token = JwtUtil.generateToken(user);
+        
+    //     // Create a structured map matching your frontend's AuthResponse interface
+    //     Map<String, Object> response = new HashMap<>();
+    //     response.put("token", token);
+    //     response.put("id", user.getId());
+    //     response.put("username", user.getUsername());
+    //     response.put("email", user.getEmail());
+    //     response.put("role", user.getRole()); 
+    //     response.put("profileUrl", user.getProfileUrl()); 
+    //     return ResponseEntity.ok(response);
+    // }
 
 
     // Endpoint to search for users based on a query string and project ID

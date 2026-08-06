@@ -1,6 +1,10 @@
 package com.StorySmith.Story_Smith.service;
 
 import com.StorySmith.Story_Smith.model.User;
+import com.StorySmith.Story_Smith.model.UserRole;
+import com.StorySmith.Story_Smith.repository.TelemetryRepository;
+import com.StorySmith.Story_Smith.model.telemetry.TelemetryEvent;
+import com.StorySmith.Story_Smith.model.telemetry.TelemetryEventType;
 import com.StorySmith.Story_Smith.repository.UserRepository;
 
 import org.junit.jupiter.api.Test;
@@ -12,11 +16,15 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyMap;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-
+    
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -26,29 +34,67 @@ public class UserServiceTest {
     @Mock
     private UserRepository userRepository;
 
+    @Mock 
+    private TelemetryRepository telemetryRepository;
+
+    @Mock
+    private TelemetryService telemetryService;
+
+    @Mock
+    private PasswordEncoder encoder;
+
     // Injects the mock UserRepository into the UserService instance for testing
     @InjectMocks
     private UserService userService;
 
     // Test for the createUser method in UserService
     @Test
-    public void testCreateUser() {
+    public void testRegisterUser() {
 
-        // Create a sample user object to be used in the test
         User user = new User();
         user.setUsername("testuser");
         user.setPassword("password");
+        user.setEmail("test@test.com");
+        user.setFirstName("Test");
+        user.setLastName("User");
 
-        // Mock the behavior of userRepository.save to return the user object when called
-        when(userRepository.save(any(User.class))).thenReturn(user);
+        when(userRepository.existsByUsername("testuser"))
+                .thenReturn(false);
 
-        // Call the createUser method in UserService
-        User createdUser = userService.createUser(user);
+        when(userRepository.existsByEmail("test@test.com"))
+                .thenReturn(false);
 
-        // Verify that the userRepository.save method was called exactly once with the user object
-        assertNotNull(createdUser);
-        assertEquals("testuser", createdUser.getUsername());
-        verify(userRepository, times(1)).save(user);
+        when(encoder.encode("password"))
+                .thenReturn("encodedPassword");
+
+        when(userRepository.save(any(User.class)))
+                .thenAnswer(invocation -> {
+                    User savedUser = invocation.getArgument(0);
+                    savedUser.setId(1L);
+                    return savedUser;
+                });
+
+
+        ResponseEntity<String> response = userService.register(user);
+
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals("User registered successfully", response.getBody());
+
+
+        assertEquals(UserRole.USER, user.getRole());
+        assertEquals("encodedPassword", user.getPassword());
+
+
+        verify(userRepository, times(1))
+                .save(user);
+
+        verify(telemetryService, times(1))
+                .recordEvent(
+                        eq(TelemetryEventType.USER_REGISTER),
+                        eq(1L),
+                        anyMap()
+                );
     }
 
     @Test
@@ -67,6 +113,7 @@ public class UserServiceTest {
         when(userRepository.existsByEmail("test@test.com"))
                 .thenReturn(true);
 
+        
         // Call the register method in UserService
         // String result = userService.register(user);
         ResponseEntity<?> result = userService.register(user);

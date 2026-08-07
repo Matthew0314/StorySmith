@@ -1,0 +1,1 @@
+kubectl port-forward svc/ingress-nginx-controller -n ingress-nginx 8080:80

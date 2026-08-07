@@ -67,3 +67,7 @@ docker-data/
 # Database backups
 *.sql
 *.dump
+
+
+#Kubernetes
+k8s/*secret.yaml

@@ -58,7 +58,11 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(List.of(
             "http://localhost:5173",
-            "http://storysmith-frontend-matthew.s3-website-us-east-1.amazonaws.com"
+            "http://storysmith-frontend-matthew.s3-website-us-east-1.amazonaws.com",
+            "http://storysmith.local",
+            "http://storysmith.local:8080",
+            "http://localhost:8080",
+            ":8080"
         ));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("Authorization", "Content-Type", "Cache-Control"));

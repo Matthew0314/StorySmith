@@ -2,6 +2,7 @@ package com.StorySmith.Story_Smith.controller;
 
 
 import com.StorySmith.Story_Smith.model.User;
+import com.StorySmith.Story_Smith.service.ApiRequestMetricService;
 import com.StorySmith.Story_Smith.service.UserService;
 import com.StorySmith.Story_Smith.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,6 +61,9 @@ public class AuthControllerTest {
 
     @MockitoBean
     private WikiEntryService wikiEntryService;
+
+    @MockitoBean
+    private ApiRequestMetricService apiRequestMetricService;
 
 
     @Test

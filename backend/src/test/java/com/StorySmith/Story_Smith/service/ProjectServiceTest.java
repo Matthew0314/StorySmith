@@ -8,6 +8,7 @@ import com.StorySmith.Story_Smith.model.ProjectCollaborators;
 import com.StorySmith.Story_Smith.model.ProjectRole;
 import com.StorySmith.Story_Smith.model.Projects;
 import com.StorySmith.Story_Smith.model.User;
+import com.StorySmith.Story_Smith.model.telemetry.TelemetryEventType;
 import com.StorySmith.Story_Smith.dto.CreateProjectDTO;
 
 import org.springframework.http.HttpStatus;
@@ -22,6 +23,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -44,6 +47,9 @@ public class ProjectServiceTest {
 
     @Mock
     private WikiService wikiService;
+
+    @Mock
+    private TelemetryService telemetryService;
 
 
     @InjectMocks
@@ -79,6 +85,13 @@ public class ProjectServiceTest {
 
         when(projectCollaboratorsRepository.save(any(ProjectCollaborators.class)))
                 .thenReturn(new ProjectCollaborators());
+
+        doNothing().when(telemetryService)
+                .recordEvent(
+                        any(TelemetryEventType.class),
+                        anyLong(),
+                        anyMap()
+                );
 
 
         // Act

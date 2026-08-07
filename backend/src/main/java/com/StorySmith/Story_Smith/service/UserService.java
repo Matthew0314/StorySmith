@@ -10,12 +10,14 @@ import com.StorySmith.Story_Smith.repository.UserRepository;
 import com.StorySmith.Story_Smith.model.UserRole;
 import com.StorySmith.Story_Smith.dto.LoginRequestDTO;
 import com.StorySmith.Story_Smith.dto.UserSearchDTO;
+import com.StorySmith.Story_Smith.security.AuthenticatedUser;
 
 import java.util.HashMap;
 import java.util.List;
 
 import com.StorySmith.Story_Smith.service.TelemetryService;
 import com.StorySmith.Story_Smith.model.telemetry.TelemetryEventType;
+import com.StorySmith.Story_Smith.service.AuthorizationService;
 
 import com.StorySmith.Story_Smith.security.JwtUtil;
 
@@ -31,8 +33,15 @@ public class UserService {
     @Autowired
     private TelemetryService telemetryService;
 
+
+    @Autowired
+    private AuthorizationService authorizationService;
+
+
+    // Register a new user
     public ResponseEntity<String> register(User user) {
         
+        // Check if the username or email already exists
         if (userRepository.existsByUsername(user.getUsername())) {
             return ResponseEntity.badRequest().body("Username already exists");
         }
@@ -41,14 +50,18 @@ public class UserService {
             return ResponseEntity.badRequest().body("Email already exists");
         }
 
+        // Set the default role for the new user
         user.setRole(UserRole.USER);
 
+        // Encode the password before saving the user
         user.setPassword(encoder.encode(user.getPassword()));
 
+        // Save the user to the database
         createUser(user);
         return ResponseEntity.ok("User registered successfully");
     }
 
+    // Login an existing user
     public ResponseEntity<?> login(LoginRequestDTO loginRequest) {
         
         // Authenticate the user using email
@@ -104,13 +117,31 @@ public class UserService {
         return ResponseEntity.ok(response);
     }
 
-    public List<UserSearchDTO> searchUsers(Long projectId, String query) {
-        return userRepository.searchUsersNotInProject(projectId, query)
+
+    // Search for users based on a query string and project ID
+    public ResponseEntity<List<UserSearchDTO>> searchUsers(Long projectId, String query, AuthenticatedUser authenticatedUser)
+    {
+        if (authenticatedUser == null) {
+            return ResponseEntity.status(401).build(); // Unauthorized
+        }
+
+        if (projectId == null) {
+            return ResponseEntity.badRequest().build(); // Bad Request
+        }
+
+        if (!authorizationService.userHasAccessToProject(projectId, authenticatedUser.getId())) {
+            return ResponseEntity.status(403).build(); // Forbidden
+        }
+
+        
+        return ResponseEntity.ok(userRepository.searchUsersNotInProject(projectId, query)
                 .stream()
                 .map(UserSearchDTO::new)
-                .toList();
+                .toList());
     }
 
+
+    // Create a new user and record telemetry event
     public User createUser(User user) {
         userRepository.save(user);
 

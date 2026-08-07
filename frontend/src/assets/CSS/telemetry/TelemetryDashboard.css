@@ -1,38 +1,293 @@
-.metric-card {
-    background: white;
+.telemetry-dashboard {
 
-    border-radius: 12px;
+    padding: 30px;
 
-    padding: 20px;
+    min-height: 100vh;
 
-    box-shadow: 0 2px 8px rgba(0,0,0,.1);
+    background: var(--telemetry-background);
+
+    color: var(--telemetry-text);
+
 }
 
+
+/*
+    Header
+*/
+
+.telemetry-dashboard h1 {
+
+    margin-bottom: 30px;
+
+    font-size: 2.2rem;
+
+    font-weight: 700;
+
+}
+
+
+/*
+    Metric Cards
+*/
+
 .metric-grid {
+
     display: grid;
 
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    grid-template-columns:
+        repeat(auto-fit, minmax(220px, 1fr));
 
     gap: 20px;
+
+    margin-bottom: 35px;
+
+}
+
+
+.metric-card {
+
+    background: var(--telemetry-card-bg);
+
+    border-radius: var(--telemetry-radius);
+
+    padding: 22px;
+
+    box-shadow: var(--telemetry-shadow);
+
+    border: 1px solid var(--telemetry-border);
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+
+}
+
+
+.metric-card:hover {
+
+    transform: translateY(-3px);
+
+    box-shadow:
+        0 8px 20px rgba(0,0,0,0.12);
+
 }
 
 
 .metric-card h3 {
+
     margin: 0;
+
+    font-size: .95rem;
+
+    font-weight: 500;
+
+    color: var(--telemetry-muted-text);
+
 }
+
 
 .metric-card p {
-    font-size: 2rem;
 
-    font-weight: bold;
+    margin-top: 12px;
+
+    margin-bottom: 0;
+
+    font-size: 2.2rem;
+
+    font-weight: 700;
+
 }
+
+
+
+/*
+    Chart
+*/
 
 .chart-container {
 
-    margin-top: 30px;
+    background: var(--telemetry-card-bg);
 
-    padding: 20px;
+    padding: 25px;
 
-    border-radius: 12px;
+    margin-bottom: 35px;
+
+    border-radius: var(--telemetry-radius);
+
+    box-shadow: var(--telemetry-shadow);
+
+    border: 1px solid var(--telemetry-border);
+
+}
+
+
+
+/*
+    Time Filter
+*/
+
+.time-filter {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    background: var(--telemetry-card-bg);
+
+    padding: 15px 20px;
+
+    margin-bottom: 30px;
+
+    border-radius: var(--telemetry-radius);
+
+    box-shadow: var(--telemetry-shadow);
+
+    border: 1px solid var(--telemetry-border);
+
+    width: fit-content;
+
+}
+
+
+.time-filter label {
+
+    font-weight: 600;
+
+}
+
+
+.time-filter select {
+
+    padding: 8px 12px;
+
+    border-radius: 8px;
+
+    border: 1px solid var(--telemetry-border);
+
+    background: var(--telemetry-card-bg);
+
+    cursor: pointer;
+
+}
+
+
+
+/*
+    Dashboard Sections
+*/
+
+.dashboard-section {
+
+    background: var(--telemetry-card-bg);
+
+    padding: 25px;
+
+    margin-bottom: 35px;
+
+    border-radius: var(--telemetry-radius);
+
+    box-shadow: var(--telemetry-shadow);
+
+    border: 1px solid var(--telemetry-border);
+
+}
+
+
+
+/*
+    Tables
+*/
+
+.dashboard-section table {
+
+    width: 100%;
+
+    border-collapse: collapse;
+
+}
+
+
+.dashboard-section th {
+
+    text-align: left;
+
+    padding: 12px;
+
+    font-size: .9rem;
+
+    color: var(--telemetry-muted-text);
+
+    border-bottom:
+        1px solid var(--telemetry-border);
+
+}
+
+
+.dashboard-section td {
+
+    padding: 12px;
+
+    border-bottom:
+        1px solid var(--telemetry-border);
+
+}
+
+
+.dashboard-section tbody tr {
+
+    transition:
+        background-color .15s ease;
+
+}
+
+
+.dashboard-section tbody tr:hover {
+
+    background-color:
+        rgba(0,0,0,0.03);
+
+}
+
+
+
+/*
+    Pagination
+*/
+
+.pagination {
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    gap: 15px;
+
+    margin-top: 20px;
+
+}
+
+
+.pagination button {
+
+    padding: 8px 14px;
+
+    border-radius: 8px;
+
+    border: 1px solid var(--telemetry-border);
+
+    cursor: pointer;
+
+}
+
+
+.pagination button:disabled {
+
+    opacity: .5;
+
+    cursor: not-allowed;
 
 }

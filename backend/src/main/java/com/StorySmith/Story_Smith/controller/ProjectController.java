@@ -32,6 +32,9 @@ public class ProjectController {
     private com.StorySmith.Story_Smith.service.ProjectService projectService;
 
     @Autowired
+    private com.StorySmith.Story_Smith.service.AuthorizationService authorizationService;
+
+    @Autowired
     private com.StorySmith.Story_Smith.service.ProjectSettingsService projectSettingsService;
 
     @GetMapping("/{id}/owner")
@@ -68,7 +71,7 @@ public class ProjectController {
 
         // Check if the authenticated user has access to the project
         AuthenticatedUser userDetails = (AuthenticatedUser)authentication.getPrincipal();
-        if (!projectService.userHasAccessToProject(id, userDetails.getId())) {
+        if (!authorizationService.userHasAccessToProject(id, userDetails.getId())) {
             return ResponseEntity.status(403).build(); // Forbidden
         }
         

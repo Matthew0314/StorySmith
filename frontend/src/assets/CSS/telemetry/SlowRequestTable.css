@@ -1,0 +1,72 @@
+/* Slow Endpoints tables */
+
+.slow-request-table {
+    margin-top: 30px;
+}
+
+.slow-request-info {
+    margin-bottom: 15px;
+    font-size: 14px;
+}
+
+.table-controls {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.table-controls input {
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 250px;
+}
+
+.table-controls button {
+    padding: 8px 12px;
+    cursor: pointer;
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-weight: 600;
+}
+
+.status-success {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.status-client-error {
+    background-color: #fff3cd;
+    color: #856404;
+}
+
+.status-server-error {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.empty-table {
+    padding: 20px;
+    text-align: center;
+}
+
+.pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.pagination button {
+    padding: 8px 14px;
+}
+
+.pagination button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}

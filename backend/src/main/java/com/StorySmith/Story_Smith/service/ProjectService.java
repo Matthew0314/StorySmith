@@ -149,22 +149,22 @@ public class ProjectService {
         return projectRepository.findById(id).orElse(null);
     }
 
-    public Boolean userHasAccessToProject(Long projectId, Long userId) {
-        // Check if the user is the owner of the project
-        Projects project = projectRepository.findById(projectId).orElse(null);
-        if (project != null && project.getOwner().getId().equals(userId)) {
-            return true;
-        }
+    // public Boolean userHasAccessToProject(Long projectId, Long userId) {
+    //     // Check if the user is the owner of the project
+    //     Projects project = projectRepository.findById(projectId).orElse(null);
+    //     if (project != null && project.getOwner().getId().equals(userId)) {
+    //         return true;
+    //     }
 
-        if (project != null) {
-            // Check if the user is a collaborator on the project
-            List<ProjectCollaborators> collaborators = projectCollaboratorsRepository.findListByProjectIdAndUserId(projectId, userId);
-            if (!collaborators.isEmpty()) {
-                return true;
-            }
-        }
-        return false;
-    }
+    //     if (project != null) {
+    //         // Check if the user is a collaborator on the project
+    //         List<ProjectCollaborators> collaborators = projectCollaboratorsRepository.findListByProjectIdAndUserId(projectId, userId);
+    //         if (!collaborators.isEmpty()) {
+    //             return true;
+    //         }
+    //     }
+    //     return false;
+    // }
 
 
 }

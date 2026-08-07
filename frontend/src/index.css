@@ -56,6 +56,21 @@
   background: var(--backgroundColor);
 
 
+  /* Telemetry Theme */
+    --telemetry-background: var(--backgroundColor);
+    --telemetry-card-bg: var(--cardBackground);
+
+    --telemetry-text: #ffffff;
+    --telemetry-muted-text: #dadada;
+
+    --telemetry-border: rgba(0, 0, 0, 0.08);
+
+    --telemetry-shadow:
+        0 4px 12px rgba(0, 0, 0, 0.08);
+
+    --telemetry-radius: 12px;
+
+
   --textColor1: #BCBD8B;
 
 

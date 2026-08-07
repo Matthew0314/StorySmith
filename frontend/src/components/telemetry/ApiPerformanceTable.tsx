@@ -2,19 +2,21 @@ import { useEffect, useState } from "react";
 import { getApiPerformanceMetrics } from "../../services/telemetryService";
 import type { ApiPerformanceMetric } from "../../services/telemetryService";
 
-
-export default function ApiPerformanceTable() {
+interface ApiPerformanceTableProps {
+    days: number;
+}
+export default function ApiPerformanceTable({ days }: ApiPerformanceTableProps) {
 
     const [metrics, setMetrics] = useState<ApiPerformanceMetric[]>([]);
 
 
     useEffect(() => {
         loadMetrics();
-    }, []);
+    }, [days]);
 
 
     async function loadMetrics() {
-        const data = await getApiPerformanceMetrics();
+        const data = await getApiPerformanceMetrics(days);
         setMetrics(data);
     }
 

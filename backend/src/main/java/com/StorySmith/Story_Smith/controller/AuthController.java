@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 
 import java.util.HashMap;
 
@@ -23,6 +24,8 @@ import com.StorySmith.Story_Smith.dto.UserSearchDTO;
 
 import java.util.Map;
 import java.util.List;
+
+import com.StorySmith.Story_Smith.security.AuthenticatedUser;
 
 
 @RestController
@@ -56,37 +59,13 @@ public class AuthController {
         // Call the login method in UserService to handle authentication logic
         return userService.login(loginRequest);
     }
-    // @PostMapping("/login")
-    // public ResponseEntity<?> login(@RequestBody LoginRequestDTO loginRequest) {
-
-    //     // Authenticate the user using email and password
-    //     User user = userRepository.findByEmail(loginRequest.getEmail()); // Ensure getter is used
-
-    //     // Check if user exists and password matches
-    //     if (user == null || !passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
-    //         return ResponseEntity.status(401).body(Map.of("message", "Invalid email or password"));
-    //     }
-
-    //     // Generate JWT token for the authenticated user
-    //     String token = JwtUtil.generateToken(user);
-        
-    //     // Create a structured map matching your frontend's AuthResponse interface
-    //     Map<String, Object> response = new HashMap<>();
-    //     response.put("token", token);
-    //     response.put("id", user.getId());
-    //     response.put("username", user.getUsername());
-    //     response.put("email", user.getEmail());
-    //     response.put("role", user.getRole()); 
-    //     response.put("profileUrl", user.getProfileUrl()); 
-    //     return ResponseEntity.ok(response);
-    // }
-
+    
 
     // Endpoint to search for users based on a query string and project ID
     @GetMapping("/members/search")
-    public List<UserSearchDTO> searchUsers(@RequestParam Long projectId, @RequestParam String query) {
+    public ResponseEntity<List<UserSearchDTO>> searchUsers(@RequestParam Long projectId, @RequestParam String query, Authentication authentication) {
         // Call the searchUsers method in UserService to perform the search
-        return userService.searchUsers(projectId, query);
+        return ResponseEntity.ok(userService.searchUsers(projectId, query, (AuthenticatedUser)authentication.getPrincipal()).getBody());
     }
 
     // Endpoint to update user information, including profile URL and name
